@@ -45,3 +45,23 @@ exports.getOrg = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.addMember = async (req, res) => {
+  try {
+    const { user_id, role } = req.body;
+    const { slug } = req.params;
+
+    const org = await Organization.findBySlug(slug);
+    if (!org) return res.status(404).json({ error: 'Organization not found' });
+
+    const adminMember = await Organization.getMember(org.id, req.user.id);
+    if (!adminMember || adminMember.role !== 'admin') {
+      return res.status(403).json({ error: 'Only admins can add members' });
+    }
+
+    const member = await Organization.addMember(org.id, user_id, role);
+    res.status(201).json(member);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

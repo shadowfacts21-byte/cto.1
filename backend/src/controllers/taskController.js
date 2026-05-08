@@ -12,12 +12,30 @@ const checkAccess = async (projectId, userId) => {
 exports.createTask = async (req, res) => {
   try {
     const { project_id, title, description, status, priority, assigned_to } = req.body;
+    if (!title) return res.status(400).json({ error: 'title is required' });
+    if (!project_id) return res.status(400).json({ error: 'project_id is required' });
+
     const member = await checkAccess(project_id, req.user.id);
     if (!member) return res.status(403).json({ error: 'Access denied' });
 
     const task = await Task.create({ project_id, title, description, status, priority, assigned_to });
     await Task.logActivity({ task_id: task.id, user_id: req.user.id, action: 'created', details: `Task "${title}" created` });
     res.status(201).json(task);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.deleteTask = async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+    if (!task) return res.status(404).json({ error: 'Task not found' });
+
+    const member = await checkAccess(task.project_id, req.user.id);
+    if (!member) return res.status(403).json({ error: 'Access denied' });
+
+    await Task.delete(req.params.id);
+    res.status(204).send();
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

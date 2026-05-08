@@ -1,7 +1,7 @@
 const db = require('../db');
 const { randomUUID } = require('crypto');
 
-const escape = (str) => str.replace(/'/g, "''");
+const escape = (str) => (str ? String(str).replace(/'/g, "''") : '');
 
 const Organization = {
   create: async ({ name, slug, userId }) => {
@@ -27,6 +27,11 @@ const Organization = {
   getMember: async (orgId, userId) => {
     const members = await db.query(`SELECT * FROM organization_members WHERE organization_id = '${orgId}' AND user_id = '${userId}'`);
     return members[0] || null;
+  },
+
+  addMember: async (orgId, userId, role = 'member') => {
+    await db.query(`INSERT INTO organization_members (organization_id, user_id, role) VALUES ('${orgId}', '${userId}', '${role}')`);
+    return { organization_id: orgId, user_id: userId, role };
   }
 };
 

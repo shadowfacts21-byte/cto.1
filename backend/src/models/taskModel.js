@@ -1,7 +1,7 @@
 const db = require('../db');
 const { randomUUID } = require('crypto');
 
-const escape = (str) => str ? str.replace(/'/g, "''") : null;
+const escape = (str) => (str ? String(str).replace(/'/g, "''") : '');
 
 const Task = {
   create: async ({ project_id, title, description, status = 'todo', priority = 'medium', assigned_to = null }) => {

@@ -71,17 +71,32 @@
 - `GET /api/orgs`: List organizations user belongs to.
 - `POST /api/orgs`: Create a new organization.
 - `GET /api/orgs/:slug`: Get organization details.
+- `POST /api/orgs/:slug/members`: Add a member to an organization (Admin only).
 
 ### Projects
 - `GET /api/orgs/:slug/projects`: List projects in an organization.
-- `POST /api/orgs/:slug/projects`: Create a new project in an organization.
+- `POST /api/orgs/:slug/projects`: Create a new project in an organization (Plan limits apply).
 - `GET /api/projects/:id`: Get project details.
 
 ### Tasks
-- `GET /api/projects/:id/tasks`: List tasks in a project.
-- `POST /api/projects/:id/tasks`: Create a new task in a project.
-- `PATCH /api/tasks/:id`: Update a task (status, assignee, etc.).
+- `GET /api/tasks?project_id=...`: List tasks in a project.
+- `POST /api/tasks`: Create a new task (send `project_id` in body).
+- `GET /api/tasks/:id`: Get task details.
+- `PATCH /api/tasks/:id`: Update a task.
 - `DELETE /api/tasks/:id`: Delete a task.
+- `POST /api/tasks/:id/comments`: Add a comment to a task.
+- `GET /api/tasks/:id/comments`: Get comments for a task.
+- `GET /api/tasks/:id/activity`: Get activity log for a task.
+
+### Billing
+- `GET /api/billing/plan`: Get current plan and subscription details.
+- `POST /api/billing/upgrade`: Upgrade or change plan (mocked).
+- `POST /api/billing/cancel`: Cancel subscription and revert to free plan.
+
+## 4. Plan Limits
+- **Free**: 3 projects per organization.
+- **Pro**: 20 projects per organization.
+- **Enterprise**: 1000 projects per organization.
 
 ## 4. Project Folder Structure
 

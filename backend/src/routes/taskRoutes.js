@@ -9,6 +9,7 @@ router.post('/', taskController.createTask);
 router.get('/', taskController.listTasks);
 router.get('/:id', taskController.getTask);
 router.patch('/:id', taskController.updateTask);
+router.delete('/:id', taskController.deleteTask);
 
 router.post('/:id/comments', taskController.addComment);
 router.get('/:id/comments', taskController.getComments);
