@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { orgService, projectService } from '../services/orgProjectService';
 import type { Organization, Project } from '../services/orgProjectService';
-import { Layout, Briefcase, Plus, ChevronRight, Loader2, FolderOpen } from 'lucide-react';
+import { Layout, Briefcase, Plus, ChevronRight, FolderOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Modal from '../components/Modal';
 
