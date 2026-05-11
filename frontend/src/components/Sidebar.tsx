@@ -12,25 +12,6 @@ const Sidebar: React.FC = () => {
     { name: 'Settings', path: '/settings', icon: Settings },
   ];
 
-  const getLinkStyle = ({ isActive }: { isActive: boolean }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-    padding: '10px 16px',
-    borderRadius: 'var(--radius)',
-    fontSize: '0.875rem',
-    fontWeight: '500',
-    textDecoration: 'none',
-    transition: 'all var(--transition)',
-    color: isActive ? 'var(--primary)' : 'var(--text-secondary)',
-    background: isActive ? 'var(--primary-light)' : 'transparent',
-  });
-
-  const getIconStyle = ({ isActive }: { isActive: boolean }) => ({
-    color: isActive ? 'var(--primary)' : 'var(--text-muted)',
-    transition: 'color var(--transition)',
-  });
-
   return (
     <aside style={{
       width: '240px',
@@ -47,10 +28,26 @@ const Sidebar: React.FC = () => {
           <NavLink
             key={item.path}
             to={item.path}
-            style={getLinkStyle}
+            style={({ isActive }) => ({
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              padding: '10px 16px',
+              borderRadius: 'var(--radius)',
+              fontSize: '0.875rem',
+              fontWeight: '500',
+              textDecoration: 'none',
+              transition: 'all var(--transition)',
+              color: isActive ? 'var(--primary)' : 'var(--text-secondary)',
+              background: isActive ? 'var(--primary-light)' : 'transparent',
+            })}
           >
-            <item.icon size={18} style={getIconStyle} />
-            {item.name}
+            {({ isActive }) => (
+              <>
+                <item.icon size={18} style={{ color: isActive ? 'var(--primary)' : 'var(--text-muted)' }} />
+                {item.name}
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
