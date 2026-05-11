@@ -1,54 +1,65 @@
-const sqlite3 = require('sqlite3').verbose();
+const initSqlJs = require('sql.js');
+const fs = require('fs');
+const path = require('path');
 
-const db = new sqlite3.Database('./database.sqlite', (err) => {
-  if (err) {
-    console.error('Database connection error:', err.message);
+const DB_PATH = path.join(__dirname, '../../database.sqlite');
+
+let db = null;
+
+async function initDb() {
+  const SQL = await initSqlJs();
+  
+  if (fs.existsSync(DB_PATH)) {
+    const buffer = fs.readFileSync(DB_PATH);
+    db = new SQL.Database(buffer);
   } else {
-    console.log('Connected to local SQLite database');
-    initTables();
+    db = new SQL.Database();
   }
-});
 
-function initTables() {
-  db.serialize(() => {
-    db.run(`CREATE TABLE IF NOT EXISTS users (
+  db.run(`
+    CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
       email TEXT UNIQUE NOT NULL,
       password_hash TEXT NOT NULL,
       name TEXT NOT NULL,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-    )`);
+    )
+  `);
 
-    db.run(`CREATE TABLE IF NOT EXISTS organizations (
+  db.run(`
+    CREATE TABLE IF NOT EXISTS organizations (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
       slug TEXT UNIQUE NOT NULL,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-    )`);
+    )
+  `);
 
-    db.run(`CREATE TABLE IF NOT EXISTS organization_members (
+  db.run(`
+    CREATE TABLE IF NOT EXISTS organization_members (
       organization_id TEXT NOT NULL,
       user_id TEXT NOT NULL,
       role TEXT DEFAULT 'member',
       joined_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      PRIMARY KEY (organization_id, user_id),
-      FOREIGN KEY (organization_id) REFERENCES organizations(id),
-      FOREIGN KEY (user_id) REFERENCES users(id)
-    )`);
+      PRIMARY KEY (organization_id, user_id)
+    )
+  `);
 
-    db.run(`CREATE TABLE IF NOT EXISTS projects (
+  db.run(`
+    CREATE TABLE IF NOT EXISTS projects (
       id TEXT PRIMARY KEY,
       organization_id TEXT NOT NULL,
       name TEXT NOT NULL,
       description TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (organization_id) REFERENCES organizations(id)
-    )`);
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
 
-    db.run(`CREATE TABLE IF NOT EXISTS app_tasks (
+  db.run(`
+    CREATE TABLE IF NOT EXISTS app_tasks (
       id TEXT PRIMARY KEY,
       project_id TEXT NOT NULL,
       title TEXT NOT NULL,
@@ -58,67 +69,68 @@ function initTables() {
       assigned_to TEXT,
       due_date TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (project_id) REFERENCES projects(id)
-    )`);
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
 
-    db.run(`CREATE TABLE IF NOT EXISTS task_comments (
+  db.run(`
+    CREATE TABLE IF NOT EXISTS task_comments (
       id TEXT PRIMARY KEY,
       task_id TEXT NOT NULL,
       user_id TEXT NOT NULL,
       content TEXT NOT NULL,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (task_id) REFERENCES app_tasks(id)
-    )`);
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
 
-    db.run(`CREATE TABLE IF NOT EXISTS task_activity (
+  db.run(`
+    CREATE TABLE IF NOT EXISTS task_activity (
       id TEXT PRIMARY KEY,
       task_id TEXT NOT NULL,
       user_id TEXT NOT NULL,
       action TEXT NOT NULL,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (task_id) REFERENCES app_tasks(id)
-    )`);
-  });
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  saveDb();
+  console.log('SQLite database initialized at', DB_PATH);
+}
+
+function saveDb() {
+  if (db) {
+    const data = db.export();
+    const buffer = Buffer.from(data);
+    fs.writeFileSync(DB_PATH, buffer);
+  }
 }
 
 const query = (sql, params = []) => {
-  return new Promise((resolve, reject) => {
-    db.all(sql, params, (err, rows) => {
-      if (err) {
-        console.error('SQL Error:', err.message);
-        reject(err);
-      } else {
-        resolve(rows);
-      }
-    });
-  });
+  const stmt = db.prepare(sql);
+  stmt.bind(params);
+  const results = [];
+  while (stmt.step()) {
+    results.push(stmt.getAsObject());
+  }
+  stmt.free();
+  return results;
 };
 
 const run = (sql, params = []) => {
-  return new Promise((resolve, reject) => {
-    db.run(sql, params, function (err) {
-      if (err) {
-        console.error('SQL Error:', err.message);
-        reject(err);
-      } else {
-        resolve({ lastID: this.lastID, changes: this.changes });
-      }
-    });
-  });
+  db.run(sql, params);
+  saveDb();
+  return { changes: db.getRowsModified() };
 };
 
 const get = (sql, params = []) => {
-  return new Promise((resolve, reject) => {
-    db.get(sql, params, (err, row) => {
-      if (err) {
-        console.error('SQL Error:', err.message);
-        reject(err);
-      } else {
-        resolve(row);
-      }
-    });
-  });
+  const stmt = db.prepare(sql);
+  stmt.bind(params);
+  let row = null;
+  if (stmt.step()) {
+    row = stmt.getAsObject();
+  }
+  stmt.free();
+  return row;
 };
 
-module.exports = { query, run, get, db };
+module.exports = { initDb, query, run, get };

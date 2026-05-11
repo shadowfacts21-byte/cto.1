@@ -17,54 +17,17 @@ exports.register = async (req, res) => {
       return res.status(400).json({ error: 'User already exists' });
     }
 
+    console.log('About to hash password...');
     const passwordHash = await bcrypt.hash(password, 10);
+    console.log('Password hashed:', passwordHash ? 'YES' : 'NO');
     const user = await User.create({ email, passwordHash, name });
+    console.log('User created:', user);
 
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '24h' });
 
     res.status(201).json({ user, token });
   } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-exports.login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Missing email or password' });
-    }
-
-    const user = await User.findByEmail(email);
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password_hash);
-    if (!isMatch) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-
-    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '24h' });
-
-    res.json({
-      user: { id: user.id, email: user.email, name: user.name },
-      token
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-exports.me = async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    res.json(user);
-  } catch (error) {
+    console.error('Register error:', error);
     res.status(500).json({ error: error.message });
   }
 };
