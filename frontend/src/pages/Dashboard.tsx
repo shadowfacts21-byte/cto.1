@@ -53,7 +53,6 @@ const Dashboard: React.FC = () => {
         console.error('Error fetching dashboard data:', err);
         setError('Failed to load dashboard data. Please try again later.');
         
-        // Mock data for development if backend fails
         if (err.response?.status === 404 || err.code === 'ERR_NETWORK') {
           const mockOrgs = [{ id: '1', name: 'My Company', slug: 'my-company' }];
           setOrgs(mockOrgs);
@@ -74,82 +73,136 @@ const Dashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+      <div className="max-w-6xl mx-auto px-4 py-8 animate-fade-in">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10">
+          <div className="space-y-2">
+            <div className="h-10 w-48 skeleton"></div>
+            <div className="h-4 w-64 skeleton"></div>
+          </div>
+          <div className="h-10 w-40 skeleton rounded-full"></div>
+        </div>
+        <div className="space-y-12">
+          {[1, 2].map(i => (
+            <div key={i} className="space-y-6">
+              <div className="flex justify-between items-end">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 skeleton rounded-2xl"></div>
+                  <div className="space-y-2">
+                    <div className="h-8 w-40 skeleton"></div>
+                    <div className="h-3 w-20 skeleton"></div>
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[1, 2, 3].map(j => (
+                  <div key={j} className="h-48 skeleton rounded-2xl"></div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+    <div className="max-w-6xl mx-auto px-4 py-8 animate-fade-in">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10">
+        <div>
+          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Dashboard</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">Manage your organizations and active projects.</p>
+        </div>
         <button 
           onClick={() => setIsOrgModalOpen(true)}
-          className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm text-sm font-medium"
+          className="btn-primary"
         >
-          <Plus size={18} />
+          <Plus size={18} className="mr-2" />
           New Organization
         </button>
       </div>
 
       {error && (
-        <div className="bg-amber-50 border border-amber-200 text-amber-700 px-4 py-3 rounded-lg mb-6 text-sm">
+        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400 px-6 py-4 rounded-2xl mb-8 text-sm flex items-center gap-3">
+          <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></div>
           {error} (Using offline mode)
         </div>
       )}
 
       {orgs.length === 0 ? (
-        <div className="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
-          <Layout className="mx-auto h-12 w-12 text-gray-400" />
-          <h3 className="mt-2 text-sm font-medium text-gray-900">No organizations</h3>
-          <p className="mt-1 text-sm text-gray-500">Get started by creating a new organization.</p>
+        <div className="text-center py-20 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800">
+          <Layout className="mx-auto h-16 w-16 text-slate-300 dark:text-slate-700" />
+          <h3 className="mt-4 text-lg font-bold text-slate-900 dark:text-white">No organizations found</h3>
+          <p className="mt-2 text-slate-500 dark:text-slate-400">Get started by creating your first organization.</p>
+          <button 
+            onClick={() => setIsOrgModalOpen(true)}
+            className="btn-primary mt-8"
+          >
+            Create Organization
+          </button>
         </div>
       ) : (
-        <div className="space-y-8">
-          {orgs.map((org) => (
-            <div key={org.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
-              <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <Layout size={20} className="text-indigo-600" />
-                  <h2 className="text-lg font-semibold text-gray-900">{org.name}</h2>
+        <div className="space-y-12">
+          {orgs.map((org, idx) => (
+            <div key={org.id} className={`animate-slide-up delay-${(idx + 1) * 100}`}>
+              <div className="flex justify-between items-end mb-6">
+                <div className="flex items-center gap-4">
+                  <div className="bg-primary/10 p-3 rounded-2xl">
+                    <Layout size={24} className="text-primary" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{org.name}</h2>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{org.slug}</p>
+                  </div>
                 </div>
                 <Link 
                   to={`/orgs/${org.slug}`} 
-                  className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center gap-1"
+                  className="text-primary hover:text-primary-hover text-sm font-bold flex items-center gap-1 group"
                 >
-                  View Details
-                  <ChevronRight size={16} />
+                  Organization Settings
+                  <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
               
-              <div className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {projectsMap[org.slug]?.map((project) => (
-                    <Link
-                      key={project.id}
-                      to={`/projects/${project.id}`}
-                      className="group p-4 border border-gray-200 rounded-lg hover:border-indigo-300 hover:shadow-md transition-all"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="bg-indigo-50 p-2 rounded-md text-indigo-600 group-hover:bg-indigo-100 transition-colors">
-                          <Briefcase size={20} />
-                        </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {projectsMap[org.slug]?.map((project) => (
+                  <Link
+                    key={project.id}
+                    to={`/projects/${project.id}`}
+                    className="card p-6 flex flex-col group hover-lift"
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="bg-primary/5 p-3 rounded-xl text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-soft">
+                        <Briefcase size={22} />
                       </div>
-                      <h3 className="mt-3 font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
-                        {project.name}
-                      </h3>
-                      <p className="mt-1 text-sm text-gray-500 line-clamp-2">
-                        {project.description || 'No description provided.'}
-                      </p>
-                    </Link>
-                  ))}
-                  
-                  <button className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-200 rounded-lg text-gray-500 hover:text-indigo-600 hover:border-indigo-300 transition-all">
-                    <Plus size={24} />
-                    <span className="mt-2 text-sm font-medium">New Project</span>
-                  </button>
-                </div>
+                      <div className="flex -space-x-2">
+                        {[1, 2, 3].map(i => (
+                          <div key={i} className="w-8 h-8 rounded-full border-2 border-white dark:border-slate-900 bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-[10px] font-bold">
+                            U{i}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                      {project.name}
+                    </h3>
+                    <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 line-clamp-2 flex-grow">
+                      {project.description || 'Deliver amazing results with your team in this project.'}
+                    </p>
+                    <div className="mt-6 pt-4 border-t border-slate-50 dark:border-slate-800 flex justify-between items-center text-xs font-bold text-slate-400 uppercase tracking-wider">
+                      <span>12 Tasks</span>
+                      <span className="text-primary group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                        Open Board <ChevronRight size={14} />
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+                
+                <button className="flex flex-col items-center justify-center p-8 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800 text-slate-400 hover:text-primary hover:border-primary hover:bg-primary/5 transition-all group">
+                  <div className="bg-slate-100 dark:bg-slate-900 p-4 rounded-full group-hover:bg-primary/10 transition-colors mb-3">
+                    <Plus size={32} />
+                  </div>
+                  <span className="text-sm font-bold uppercase tracking-widest">Add Project</span>
+                </button>
               </div>
             </div>
           ))}
@@ -161,14 +214,14 @@ const Dashboard: React.FC = () => {
         onClose={() => setIsOrgModalOpen(false)}
         title="Create New Organization"
       >
-        <form onSubmit={handleCreateOrg} className="space-y-4">
+        <form onSubmit={handleCreateOrg} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Organization Name</label>
+            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Organization Name</label>
             <input
               type="text"
               value={newOrgName}
               onChange={(e) => setNewOrgName(e.target.value)}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+              className="input-field"
               placeholder="e.g. Acme Corp"
               required
               disabled={isSubmitting}
@@ -178,14 +231,14 @@ const Dashboard: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsOrgModalOpen(false)}
-              className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md transition-colors"
+              className="btn-secondary"
               disabled={isSubmitting}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors text-sm font-medium disabled:opacity-50"
+              className="btn-primary"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Creating...' : 'Create Organization'}

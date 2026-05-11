@@ -33,4 +33,12 @@ export const projectService = {
     const response = await api.post(`/orgs/${orgSlug}/projects`, data);
     return response.data as Project;
   },
+  inviteGuest: async (projectId: string, email: string) => {
+    const response = await api.post(`/projects/${projectId}/guest-invites`, { email });
+    return response.data;
+  },
+  getGuestProject: async (token: string) => {
+    const response = await api.get(`/guest/projects/${token}`);
+    return response.data as { project: Project; tasks: any[] };
+  }
 };
