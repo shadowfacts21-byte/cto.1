@@ -5,6 +5,10 @@ const orgRoutes = require('./routes/orgRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 const billingRoutes = require('./routes/billingRoutes');
+const timeRoutes = require('./routes/timeRoutes');
+const analyticsRoutes = require('./routes/analyticsRoutes');
+const attachmentRoutes = require('./routes/attachmentRoutes');
+const automationRoutes = require('./routes/automationRoutes');
 
 const app = express();
 
@@ -16,6 +20,10 @@ app.use('/api/orgs', orgRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/billing', billingRoutes);
+app.use('/api/time', timeRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/attachments', attachmentRoutes);
+app.use('/api/automations', automationRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, MoreVertical, MessageSquare, User, AlertCircle, Loader2, Send } from 'lucide-react';
+import { Plus, MoreVertical, MessageSquare, User, AlertCircle, Loader2, Send, Clock } from 'lucide-react';
 import { taskService } from '../services/taskService';
 import type { Task, Comment, Activity } from '../services/taskService';
 import Modal from './Modal';
+import Timer from './Timer';
+import AttachmentList from './AttachmentList';
 
 interface KanbanBoardProps {
   projectId: string;
@@ -195,8 +197,14 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId }) => {
                   <div className="flex items-center gap-3">
                     <div className="flex items-center gap-1 text-[10px]">
                       <MessageSquare size={12} />
-                      <span>{task.id.length % 3}</span> {/* Just a dummy count for now, backend could provide this */}
+                      <span>{task.id.length % 3}</span> {/* Just a dummy count for now */}
                     </div>
+                    {task.total_minutes !== undefined && task.total_minutes > 0 && (
+                      <div className="flex items-center gap-1 text-[10px]">
+                        <Clock size={12} />
+                        <span>{Math.floor(task.total_minutes / 60)}h {task.total_minutes % 60}m</span>
+                      </div>
+                    )}
                   </div>
                   <div className="w-6 h-6 rounded-full bg-indigo-100 border border-white flex items-center justify-center text-indigo-600 text-[10px] font-bold">
                     {task.assigned_to ? task.assigned_to.substring(0, 2).toUpperCase() : '??'}
@@ -226,6 +234,10 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId }) => {
             <div>
               <p className="text-sm text-gray-600 leading-relaxed">{selectedTask.description || 'No description provided.'}</p>
             </div>
+
+            <AttachmentList taskId={selectedTask.id} />
+
+            <Timer taskId={selectedTask.id} />
             
             <div className="grid grid-cols-2 gap-4 border-y border-gray-100 py-4">
               <div className="space-y-1">

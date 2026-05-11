@@ -10,6 +10,7 @@ export interface Task {
   assigned_to?: string;
   due_date?: string;
   created_at: string;
+  total_minutes?: number;
 }
 
 export interface Comment {
