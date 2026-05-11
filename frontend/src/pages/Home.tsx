@@ -149,7 +149,7 @@ const Home: React.FC = () => {
         }}>
           <div style={{ 
             height: '100%', 
-            background: 'linear-gradient(135deg, var(--primary-light) 0%, var(--accent-light) 100%)',
+            background: 'linear-gradient(135deg, var(--primary-light) 0%, rgba(6, 182, 212, 0.2) 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
