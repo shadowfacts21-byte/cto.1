@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import { LogOut, User as UserIcon, Settings, Bell } from 'lucide-react';
+import { LogOut, Settings, Bell } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Header: React.FC = () => {
@@ -11,9 +11,7 @@ const Header: React.FC = () => {
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      background: 'rgba(255, 255, 255, 0.9)',
-      backdropFilter: 'blur(16px)',
-      WebkitBackdropFilter: 'blur(16px)',
+      background: 'var(--surface)',
       borderBottom: '1px solid var(--border)',
       padding: '0 24px',
       height: '64px',
