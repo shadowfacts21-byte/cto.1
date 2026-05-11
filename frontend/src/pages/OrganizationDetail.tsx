@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { orgService, projectService } from '../services/orgProjectService';
 import type { Organization, Project } from '../services/orgProjectService';
-import { Briefcase, Plus, Loader2, ChevronLeft } from 'lucide-react';
+import { Briefcase, Plus, Loader2, ChevronLeft, BarChart3, ChevronRight } from 'lucide-react';
 import Modal from '../components/Modal';
+import AnalyticsCharts from '../components/AnalyticsCharts';
 
 const OrganizationDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -42,8 +43,6 @@ const OrganizationDetail: React.FC = () => {
       if (!slug) return;
       try {
         setLoading(true);
-        // In a real app, we might have a getOrganizationBySlug endpoint
-        // For now, we list all and find the one with the slug
         const organizations = await orgService.getOrganizations();
         const foundOrg = organizations.find(o => o.slug === slug);
         
@@ -58,7 +57,6 @@ const OrganizationDetail: React.FC = () => {
         console.error('Error fetching org data:', err);
         setError('Failed to load organization data.');
         
-        // Mock data fallback
         if (slug === 'my-company') {
           setOrg({ id: '1', name: 'My Company', slug: 'my-company' });
           setProjects([
@@ -77,18 +75,39 @@ const OrganizationDetail: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+      <div className="max-w-6xl mx-auto px-4 py-8 animate-fade-in">
+        <div className="mb-10">
+          <div className="h-4 w-20 skeleton mb-4"></div>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 skeleton rounded-2xl"></div>
+              <div className="space-y-2">
+                <div className="h-10 w-64 skeleton"></div>
+                <div className="h-4 w-32 skeleton"></div>
+              </div>
+            </div>
+            <div className="h-10 w-40 skeleton rounded-full"></div>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="h-64 skeleton rounded-[2rem]"></div>
+          ))}
+        </div>
       </div>
     );
   }
 
   if (error && !org) {
     return (
-      <div className="text-center py-12">
-        <h2 className="text-xl font-semibold text-gray-900">{error}</h2>
-        <Link to="/dashboard" className="mt-4 text-indigo-600 hover:text-indigo-800 flex items-center justify-center gap-1">
-          <ChevronLeft size={16} />
+      <div className="text-center py-20 animate-fade-in">
+        <div className="bg-red-50 dark:bg-red-900/20 p-8 rounded-[2.5rem] inline-block mb-8">
+          <h2 className="text-2xl font-black text-red-600 dark:text-red-400 mb-2">{error}</h2>
+          <p className="text-red-500/60 font-medium">We couldn't find the organization you were looking for.</p>
+        </div>
+        <br/>
+        <Link to="/dashboard" className="btn-secondary py-3 px-8">
+          <ChevronLeft size={18} className="mr-2" />
           Back to Dashboard
         </Link>
       </div>
@@ -96,100 +115,129 @@ const OrganizationDetail: React.FC = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="mb-6">
-        <Link to="/dashboard" className="text-sm text-gray-500 hover:text-indigo-600 flex items-center gap-1 mb-2">
-          <ChevronLeft size={14} />
-          Back to Dashboard
+    <div className="max-w-6xl mx-auto px-4 py-8 animate-fade-in">
+      <div className="mb-10">
+        <Link to="/dashboard" className="text-sm font-bold text-slate-400 hover:text-primary flex items-center gap-1 mb-4 group w-fit transition-colors">
+          <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+          Dashboard
         </Link>
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">{org?.name}</h1>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+          <div className="flex items-center gap-4">
+            <div className="bg-gradient-to-tr from-primary to-accent p-4 rounded-2xl text-white shadow-lg shadow-primary/20">
+              <Briefcase size={32} />
+            </div>
+            <div>
+              <h1 className="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">{org?.name}</h1>
+              <p className="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-[0.2em] text-xs mt-1">{org?.slug}</p>
+            </div>
+          </div>
           <button 
             onClick={() => setIsProjectModalOpen(true)}
-            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm text-sm font-medium"
+            className="btn-primary"
           >
-            <Plus size={18} />
+            <Plus size={18} className="mr-2" />
             New Project
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-        {projects.map((project) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+        {projects.map((project, idx) => (
           <Link
             key={project.id}
             to={`/projects/${project.id}`}
-            className="group bg-white p-6 rounded-xl border border-gray-200 hover:border-indigo-300 hover:shadow-lg transition-all"
+            className={`card p-8 group hover-lift animate-slide-up delay-${(idx + 1) * 100}`}
           >
-            <div className="bg-indigo-50 w-12 h-12 flex items-center justify-center rounded-lg text-indigo-600 group-hover:bg-indigo-100 transition-colors mb-4">
-              <Briefcase size={24} />
+            <div className="bg-primary/5 w-14 h-14 flex items-center justify-center rounded-2xl text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300 mb-6 shadow-soft group-hover:rotate-3 group-hover:scale-110">
+              <Briefcase size={28} />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
               {project.name}
             </h3>
-            <p className="mt-2 text-sm text-gray-500 line-clamp-3">
-              {project.description || 'No description provided.'}
+            <p className="mt-3 text-sm text-slate-500 dark:text-slate-400 line-clamp-3 leading-relaxed">
+              {project.description || 'Deliver amazing results with your team in this project.'}
             </p>
-            <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center text-xs text-gray-400">
+            <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs font-black uppercase tracking-widest text-slate-400">
               <span>Updated recently</span>
-              <span className="text-indigo-600 font-medium">View Project →</span>
+              <span className="text-primary group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                Details <ChevronRight size={14} />
+              </span>
             </div>
           </Link>
         ))}
         
         <button 
           onClick={() => setIsProjectModalOpen(true)}
-          className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-200 rounded-xl text-gray-500 hover:text-indigo-600 hover:border-indigo-300 transition-all min-h-[200px]"
+          className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-3xl text-slate-400 hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all min-h-[250px] group animate-slide-up"
         >
-          <Plus size={32} />
-          <span className="mt-2 font-medium">Create New Project</span>
+          <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-full group-hover:bg-primary/10 transition-colors mb-4">
+            <Plus size={40} className="group-hover:rotate-90 transition-transform" />
+          </div>
+          <span className="font-black uppercase tracking-[0.2em] text-xs">Create Project</span>
         </button>
       </div>
+
+      {slug && (
+        <div className="mt-24 mb-12 animate-slide-up delay-300">
+          <div className="flex items-center gap-4 mb-10">
+            <div className="p-3 bg-accent/10 rounded-xl text-accent">
+              <BarChart3 size={24} />
+            </div>
+            <div>
+              <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Ecosystem Insights</h2>
+              <p className="text-sm text-slate-500 font-medium">Real-time performance metrics for {org?.name}.</p>
+            </div>
+          </div>
+          <div className="card p-10">
+            <AnalyticsCharts orgSlug={slug} />
+          </div>
+        </div>
+      )}
 
       <Modal
         isOpen={isProjectModalOpen}
         onClose={() => setIsProjectModalOpen(false)}
-        title="Create New Project"
+        title="Architect New Project"
       >
-        <form onSubmit={handleCreateProject} className="space-y-4">
+        <form onSubmit={handleCreateProject} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Project Name</label>
+            <label className="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Project Identity</label>
             <input
               type="text"
               value={newProjectName}
               onChange={(e) => setNewProjectName(e.target.value)}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+              className="input-field"
               placeholder="e.g. Website Redesign"
               required
               disabled={isSubmitting}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Description</label>
+            <label className="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Strategic Goals</label>
             <textarea
               value={newProjectDesc}
               onChange={(e) => setNewProjectDesc(e.target.value)}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+              className="input-field"
               placeholder="Brief description of the project"
-              rows={3}
+              rows={4}
               disabled={isSubmitting}
             />
           </div>
-          <div className="flex justify-end gap-3 pt-4">
+          <div className="flex justify-end gap-4 pt-6">
             <button
               type="button"
               onClick={() => setIsProjectModalOpen(false)}
-              className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md transition-colors"
+              className="btn-secondary"
               disabled={isSubmitting}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors text-sm font-medium disabled:opacity-50"
+              className="btn-primary py-3 px-10"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Creating...' : 'Create Project'}
+              {isSubmitting ? 'Architecting...' : 'Deploy Project'}
             </button>
           </div>
         </form>
