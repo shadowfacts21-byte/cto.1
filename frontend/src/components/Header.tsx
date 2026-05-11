@@ -14,7 +14,7 @@ const Header: React.FC = () => {
       background: 'rgba(255, 255, 255, 0.9)',
       backdropFilter: 'blur(16px)',
       WebkitBackdropFilter: 'blur(16px)',
-      borderBottom: '1px solid var(--border-light)',
+      borderBottom: '1px solid var(--border)',
       padding: '0 24px',
       height: '64px',
       display: 'flex',
