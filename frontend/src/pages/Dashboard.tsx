@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { orgService, projectService } from '../services/orgProjectService';
 import type { Organization, Project } from '../services/orgProjectService';
-import { Layout, Briefcase, Plus, ChevronRight, Loader2 } from 'lucide-react';
+import { Layout, Briefcase, Plus, ChevronRight, Loader2, FolderOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Modal from '../components/Modal';
 
@@ -53,7 +53,6 @@ const Dashboard: React.FC = () => {
         console.error('Error fetching dashboard data:', err);
         setError('Failed to load dashboard data. Please try again later.');
         
-        // Mock data for development if backend fails
         if (err.response?.status === 404 || err.code === 'ERR_NETWORK') {
           const mockOrgs = [{ id: '1', name: 'My Company', slug: 'my-company' }];
           setOrgs(mockOrgs);
@@ -75,79 +74,191 @@ const Dashboard: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+        <div className="text-center">
+          <div className="skeleton skeleton-card" style={{ width: '300px', margin: '0 auto' }}></div>
+          <p style={{ marginTop: '16px', color: 'var(--text-muted)' }}>Loading dashboard...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+    <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+      {/* Page Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
+        <h1 style={{ fontSize: '1.75rem', fontWeight: '800', fontFamily: 'var(--font-heading)', color: 'var(--text)' }}>
+          Dashboard
+        </h1>
         <button 
           onClick={() => setIsOrgModalOpen(true)}
-          className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm text-sm font-medium"
+          className="btn btn-primary"
         >
           <Plus size={18} />
           New Organization
         </button>
       </div>
 
+      {/* Error Banner */}
       {error && (
-        <div className="bg-amber-50 border border-amber-200 text-amber-700 px-4 py-3 rounded-lg mb-6 text-sm">
+        <div style={{ 
+          background: 'var(--warning-light)', 
+          border: '1px solid var(--warning)', 
+          color: 'var(--warning)', 
+          padding: '12px 16px', 
+          borderRadius: 'var(--radius)', 
+          marginBottom: '24px',
+          fontSize: '0.875rem'
+        }}>
           {error} (Using offline mode)
         </div>
       )}
 
+      {/* Empty State */}
       {orgs.length === 0 ? (
-        <div className="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
-          <Layout className="mx-auto h-12 w-12 text-gray-400" />
-          <h3 className="mt-2 text-sm font-medium text-gray-900">No organizations</h3>
-          <p className="mt-1 text-sm text-gray-500">Get started by creating a new organization.</p>
+        <div className="card text-center" style={{ padding: '48px' }}>
+          <div style={{ 
+            width: '64px', 
+            height: '64px', 
+            background: 'var(--bg)', 
+            borderRadius: 'var(--radius-lg)', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            margin: '0 auto 24px'
+          }}>
+            <FolderOpen size={32} style={{ color: 'var(--text-muted)' }} />
+          </div>
+          <h3 style={{ fontSize: '1rem', fontWeight: '600', color: 'var(--text)', marginBottom: '8px' }}>
+            No organizations yet
+          </h3>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '24px' }}>
+            Get started by creating your first organization.
+          </p>
+          <button onClick={() => setIsOrgModalOpen(true)} className="btn btn-primary">
+            <Plus size={18} />
+            Create Organization
+          </button>
         </div>
       ) : (
-        <div className="space-y-8">
+        /* Organizations Grid */
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
           {orgs.map((org) => (
-            <div key={org.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
-              <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <Layout size={20} className="text-indigo-600" />
-                  <h2 className="text-lg font-semibold text-gray-900">{org.name}</h2>
+            <div className="card" key={org.id} style={{ padding: '0', overflow: 'hidden' }}>
+              {/* Org Header */}
+              <div style={{ 
+                background: 'var(--bg)', 
+                padding: '16px 24px', 
+                borderBottom: '1px solid var(--border)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ 
+                    width: '36px', 
+                    height: '36px', 
+                    background: 'linear-gradient(135deg, var(--primary), var(--accent))',
+                    borderRadius: 'var(--radius)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white'
+                  }}>
+                    <Layout size={18} />
+                  </div>
+                  <h2 style={{ fontSize: '1.125rem', fontWeight: '700', color: 'var(--text)' }}>
+                    {org.name}
+                  </h2>
                 </div>
                 <Link 
                   to={`/orgs/${org.slug}`} 
-                  className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center gap-1"
+                  style={{ 
+                    color: 'var(--primary)', 
+                    fontSize: '0.875rem', 
+                    fontWeight: '500',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}
                 >
                   View Details
                   <ChevronRight size={16} />
                 </Link>
               </div>
               
-              <div className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Projects Grid */}
+              <div style={{ padding: '24px' }}>
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', 
+                  gap: '16px' 
+                }}>
                   {projectsMap[org.slug]?.map((project) => (
                     <Link
                       key={project.id}
                       to={`/projects/${project.id}`}
-                      className="group p-4 border border-gray-200 rounded-lg hover:border-indigo-300 hover:shadow-md transition-all"
+                      className="card lift"
+                      style={{ 
+                        display: 'block',
+                        textDecoration: 'none',
+                        padding: '20px'
+                      }}
                     >
-                      <div className="flex items-start justify-between">
-                        <div className="bg-indigo-50 p-2 rounded-md text-indigo-600 group-hover:bg-indigo-100 transition-colors">
-                          <Briefcase size={20} />
-                        </div>
+                      <div style={{ 
+                        width: '40px', 
+                        height: '40px', 
+                        background: 'var(--primary-light)', 
+                        borderRadius: 'var(--radius)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginBottom: '16px'
+                      }}>
+                        <Briefcase size={20} style={{ color: 'var(--primary)' }} />
                       </div>
-                      <h3 className="mt-3 font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
+                      <h3 style={{ 
+                        fontSize: '0.9375rem', 
+                        fontWeight: '600', 
+                        color: 'var(--text)',
+                        marginBottom: '8px'
+                      }}>
                         {project.name}
                       </h3>
-                      <p className="mt-1 text-sm text-gray-500 line-clamp-2">
+                      <p style={{ 
+                        fontSize: '0.8125rem', 
+                        color: 'var(--text-muted)',
+                        lineHeight: '1.5',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: '2',
+                        WebkitBoxOrient: 'vertical'
+                      }}>
                         {project.description || 'No description provided.'}
                       </p>
                     </Link>
                   ))}
                   
-                  <button className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-200 rounded-lg text-gray-500 hover:text-indigo-600 hover:border-indigo-300 transition-all">
-                    <Plus size={24} />
-                    <span className="mt-2 text-sm font-medium">New Project</span>
+                  {/* New Project Card */}
+                  <button 
+                    className="card"
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '24px',
+                      border: '2px dashed var(--border)',
+                      background: 'transparent',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      gap: '8px'
+                    }}
+                  >
+                    <Plus size={24} style={{ color: 'var(--text-muted)' }} />
+                    <span style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--text-muted)' }}>
+                      New Project
+                    </span>
                   </button>
                 </div>
               </div>
@@ -156,36 +267,37 @@ const Dashboard: React.FC = () => {
         </div>
       )}
 
+      {/* Create Org Modal */}
       <Modal
         isOpen={isOrgModalOpen}
         onClose={() => setIsOrgModalOpen(false)}
         title="Create New Organization"
       >
-        <form onSubmit={handleCreateOrg} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Organization Name</label>
+        <form onSubmit={handleCreateOrg} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="form-group">
+            <label className="form-label">Organization Name</label>
             <input
               type="text"
               value={newOrgName}
               onChange={(e) => setNewOrgName(e.target.value)}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+              className="form-input"
               placeholder="e.g. Acme Corp"
               required
               disabled={isSubmitting}
             />
           </div>
-          <div className="flex justify-end gap-3 pt-4">
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', paddingTop: '16px', borderTop: '1px solid var(--border-light)' }}>
             <button
               type="button"
               onClick={() => setIsOrgModalOpen(false)}
-              className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md transition-colors"
+              className="btn btn-secondary"
               disabled={isSubmitting}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors text-sm font-medium disabled:opacity-50"
+              className="btn btn-primary"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Creating...' : 'Create Organization'}
