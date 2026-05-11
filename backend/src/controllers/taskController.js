@@ -1,6 +1,8 @@
 const Task = require('../models/taskModel');
 const Project = require('../models/projectModel');
 const Organization = require('../models/orgModel');
+const emailService = require('../services/emailService');
+const automationService = require('../services/automationService');
 
 const checkAccess = async (projectId, userId) => {
   const project = await Project.findById(projectId);
@@ -20,6 +22,11 @@ exports.createTask = async (req, res) => {
 
     const task = await Task.create({ project_id, title, description, status, priority, assigned_to });
     await Task.logActivity({ task_id: task.id, user_id: req.user.id, action: 'created', details: `Task "${title}" created` });
+    
+    if (assigned_to) {
+      await emailService.notifyTaskAssigned(task.id, assigned_to);
+    }
+    
     res.status(201).json(task);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -79,12 +86,27 @@ exports.updateTask = async (req, res) => {
     if (!member) return res.status(403).json({ error: 'Access denied' });
 
     const updatedTask = await Task.update(req.params.id, req.body);
-    await Task.logActivity({ 
-      task_id: task.id, 
-      user_id: req.user.id, 
-      action: 'updated', 
-      details: JSON.stringify(req.body) 
+    await Task.logActivity({
+      task_id: task.id,
+      user_id: req.user.id,
+      action: 'updated',
+      details: JSON.stringify(req.body)
     });
+
+    // Trigger automations if status changed
+    if (req.body.status && req.body.status !== task.status) {
+      const project = await Project.findById(task.project_id);
+      await automationService.evaluate(project.organization_id, 'task_moved_to_' + req.body.status, {
+        task_id: task.id,
+        user_id: req.user.id
+      });
+    }
+
+    // Notify if assigned_to changed
+    if (req.body.assigned_to && req.body.assigned_to !== task.assigned_to) {
+      await emailService.notifyTaskAssigned(task.id, req.body.assigned_to);
+    }
+
     res.json(updatedTask);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -101,6 +123,10 @@ exports.addComment = async (req, res) => {
 
     const comment = await Task.addComment({ task_id: task.id, user_id: req.user.id, content: req.body.content });
     await Task.logActivity({ task_id: task.id, user_id: req.user.id, action: 'commented', details: 'Added a comment' });
+    
+    // Notify assigned user
+    await emailService.notifyNewComment(task.id, req.user.id, req.body.content);
+    
     res.status(201).json(comment);
   } catch (error) {
     res.status(500).json({ error: error.message });
