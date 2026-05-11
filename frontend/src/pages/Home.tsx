@@ -63,35 +63,38 @@ const Home: React.FC = () => {
         zIndex: 100,
         background: 'rgba(255,255,255,0.9)',
         backdropFilter: 'blur(16px)',
-        borderBottom: '1px solid var(--border-light)',
-        padding: '0 48px',
+        WebkitBackdropFilter: 'blur(16px)',
+        borderBottom: '1px solid var(--border)',
+        padding: '0 24px',
         height: '64px',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.04)'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{ 
-            width: '32px', 
-            height: '32px', 
+            width: '36px', 
+            height: '36px', 
             background: 'linear-gradient(135deg, var(--primary), var(--accent))',
-            borderRadius: '8px',
+            borderRadius: '10px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: 'white'
+            color: 'white',
+            boxShadow: '0 2px 8px rgba(37, 99, 235, 0.3)'
           }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10" />
               <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
               <path d="M2 12h20" />
             </svg>
           </div>
-          <span style={{ fontFamily: 'var(--font-heading)', fontWeight: '800', fontSize: '1.125rem', color: 'var(--text)' }}>Orbit</span>
+          <span style={{ fontFamily: 'var(--font-heading)', fontWeight: '800', fontSize: '1.25rem', color: 'var(--text)' }}>Orbit</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-          <Link to="/login" style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', fontWeight: '500' }}>Sign In</Link>
-          <Link to="/register" className="btn btn-primary">Get Started</Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Link to="/login" className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '0.875rem' }}>Sign In</Link>
+          <Link to="/register" className="btn btn-primary" style={{ padding: '8px 16px', fontSize: '0.875rem' }}>Get Started</Link>
         </div>
       </header>
 

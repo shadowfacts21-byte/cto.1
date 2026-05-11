@@ -12,18 +12,44 @@ const Sidebar: React.FC = () => {
     { name: 'Settings', path: '/settings', icon: Settings },
   ];
 
+  const getLinkStyle = ({ isActive }: { isActive: boolean }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    padding: '10px 16px',
+    borderRadius: 'var(--radius)',
+    fontSize: '0.875rem',
+    fontWeight: '500',
+    textDecoration: 'none',
+    transition: 'all var(--transition)',
+    color: isActive ? 'var(--primary)' : 'var(--text-secondary)',
+    background: isActive ? 'var(--primary-light)' : 'transparent',
+  });
+
+  const getIconStyle = ({ isActive }: { isActive: boolean }) => ({
+    color: isActive ? 'var(--primary)' : 'var(--text-muted)',
+    transition: 'color var(--transition)',
+  });
+
   return (
-    <aside className="sidebar">
-      <nav className="sidebar-nav">
+    <aside style={{
+      width: '240px',
+      background: 'var(--surface)',
+      borderRight: '1px solid var(--border)',
+      padding: '24px 12px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '4px',
+      minHeight: 'calc(100vh - 64px)'
+    }}>
+      <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
         {navItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
-            className={({ isActive }) =>
-              `sidebar-link ${isActive ? 'active' : ''}`
-            }
+            style={getLinkStyle}
           >
-            <item.icon size={18} />
+            <item.icon size={18} style={getIconStyle} />
             {item.name}
           </NavLink>
         ))}
