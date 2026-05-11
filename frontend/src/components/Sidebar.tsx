@@ -24,32 +24,36 @@ const Sidebar: React.FC = () => {
       minHeight: 'calc(100vh - 64px)'
     }}>
       <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-        {navItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            style={({ isActive }) => ({
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              padding: '10px 16px',
-              borderRadius: 'var(--radius)',
-              fontSize: '0.875rem',
-              fontWeight: '500',
-              textDecoration: 'none',
-              transition: 'all var(--transition)',
-              color: isActive ? 'var(--primary)' : 'var(--text-secondary)',
-              background: isActive ? 'var(--primary-light)' : 'transparent',
-            })}
-          >
-            {({ isActive }) => (
-              <>
-                <item.icon size={18} style={{ color: isActive ? 'var(--primary)' : 'var(--text-muted)' }} />
-                {item.name}
-              </>
-            )}
-          </NavLink>
-        ))}
+        {navItems.map((item) => {
+          const IconComponent = item.icon;
+          return (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              style={({ isActive }) => {
+                const activeColor = 'var(--primary)';
+                const inactiveColor = 'var(--text-secondary)';
+                const activeBg = 'var(--primary-light)';
+                return {
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '10px 16px',
+                  borderRadius: 'var(--radius)',
+                  fontSize: '0.875rem',
+                  fontWeight: '500',
+                  textDecoration: 'none',
+                  transition: 'all var(--transition)',
+                  color: isActive ? activeColor : inactiveColor,
+                  background: isActive ? activeBg : 'transparent',
+                };
+              }}
+            >
+              <IconComponent size={18} />
+              {item.name}
+            </NavLink>
+          );
+        })}
       </nav>
     </aside>
   );
