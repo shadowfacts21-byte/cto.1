@@ -9,6 +9,9 @@ const timeRoutes = require('./routes/timeRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
 const attachmentRoutes = require('./routes/attachmentRoutes');
 const automationRoutes = require('./routes/automationRoutes');
+const integrationRoutes = require('./routes/integrationRoutes');
+const guestRoutes = require('./routes/guestRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 
 const app = express();
 
@@ -24,6 +27,9 @@ app.use('/api/time', timeRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/attachments', attachmentRoutes);
 app.use('/api/automations', automationRoutes);
+app.use('/api/integrations', integrationRoutes);
+app.use('/api/guests', guestRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
