@@ -3,12 +3,10 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Check, Zap, Shield, Clock, Users, GitBranch, BarChart3, Sparkles } from 'lucide-react';
 
 const Home: React.FC = () => {
-  const [loaded, setLoaded] = useState(false);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const [countersStarted, setCountersStarted] = useState(false);
 
   useEffect(() => {
-    setLoaded(true);
     window.scrollTo(0, 0);
   }, []);
 
