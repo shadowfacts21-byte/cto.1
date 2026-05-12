@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check, Zap, Shield, Clock, Users, GitBranch, BarChart3, Sparkles, Play, ChevronDown, Quote, Star } from 'lucide-react';
+import { ArrowRight, Check, Zap, Shield, Clock, Users, GitBranch, BarChart3, Sparkles, Play, ChevronDown, Quote, Star, TrendingUp, Folder, Plus, Settings, Bell as BellIcon, Target, ArrowUpRight, ArrowDownRight, CheckCircle, Grid } from 'lucide-react';
 
 const Home: React.FC = () => {
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
@@ -26,7 +26,7 @@ const Home: React.FC = () => {
           }
         });
       },
-      { threshold: 0.05 }
+      { threshold: 0.03 }
     );
     document.querySelectorAll('[data-section]').forEach((el) => observer.observe(el));
     return () => observer.disconnect();
@@ -62,21 +62,45 @@ const Home: React.FC = () => {
     { value: '4.9/5', label: 'User Rating' },
   ];
 
+  const teamMembers = [
+    { name: 'Alex', avatar: 'A', color: '#2563EB' },
+    { name: 'Sarah', avatar: 'S', color: '#7C3AED' },
+    { name: 'Mike', avatar: 'M', color: '#059669' },
+    { name: 'Emma', avatar: 'E', color: '#DC2626' },
+  ];
+
+  const activityItems = [
+    { user: 'Alex', action: 'completed task', target: 'Design dashboard mockup', time: '2m ago', type: 'complete' },
+    { user: 'Sarah', action: 'added comment on', target: 'API integration', time: '5m ago', type: 'comment' },
+    { user: 'Mike', action: 'created project', target: 'Mobile App v2', time: '12m ago', type: 'create' },
+    { user: 'Emma', action: 'updated status of', target: 'User Authentication', time: '18m ago', type: 'update' },
+  ];
+
+  const upcomingTasks = [
+    { title: 'Review pull requests', priority: 'high', due: 'Today' },
+    { title: 'Update documentation', priority: 'medium', due: 'Tomorrow' },
+    { title: 'Team sync meeting', priority: 'low', due: 'Jan 15' },
+  ];
+
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)', overflow: 'hidden' }}>
       <style>{`
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
-        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 30px rgba(37, 99, 235, 0.4); } 50% { box-shadow: 0 0 60px rgba(37, 99, 235, 0.7); } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes float { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-25px) rotate(3deg); } }
+        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 40px rgba(37, 99, 235, 0.4), 0 0 0 1px rgba(37, 99, 235, 0.1); } 50% { box-shadow: 0 0 60px rgba(37, 99, 235, 0.6), 0 0 0 1px rgba(37, 99, 235, 0.2); } }
         @keyframes gradient-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-        @keyframes typing { from { width: 0; } to { width: 100%; } }
-        @keyframes blink { 50% { border-color: transparent; } }
-        @keyframes orbit { from { transform: rotate(0deg) translateX(120px) rotate(0deg); } to { transform: rotate(360deg) translateX(120px) rotate(-360deg); } }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
-        .animate-on-scroll { opacity: 0; transform: translateY(30px); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        @keyframes orbit { from { transform: rotate(0deg) translateX(150px) rotate(0deg); } to { transform: rotate(360deg) translateX(150px) rotate(-360deg); } }
+        @keyframes progress { from { width: 0%; } to { width: 100%; } }
+        @keyframes glass-shine { 0% { transform: translateX(-100%) rotate(45deg); } 100% { transform: translateX(200%) rotate(45deg); } }
+        @keyframes countUp { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+        @keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+        .animate-on-scroll { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
         .animate-on-scroll.visible { opacity: 1; transform: translateY(0); }
         .stagger-1 { transition-delay: 0.05s; }
         .stagger-2 { transition-delay: 0.1s; }
@@ -88,174 +112,314 @@ const Home: React.FC = () => {
         .hero-badge { animation: fadeInUp 0.8s 0.1s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
         .hero-subtitle { animation: fadeInUp 0.8s 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
         .hero-buttons { animation: fadeInUp 0.8s 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
-        .hero-image { animation: scaleIn 1s 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
-        .orb-1 { animation: float 8s ease-in-out infinite; }
-        .orb-2 { animation: float 10s ease-in-out infinite 1s; }
-        .orb-3 { animation: float 6s ease-in-out infinite 2s; }
-        .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+        .hero-image { animation: scaleIn 1s 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        .orb-1 { animation: float 10s ease-in-out infinite; }
+        .orb-2 { animation: float 12s ease-in-out infinite 2s; }
+        .orb-3 { animation: float 8s ease-in-out infinite 4s; }
+        .pulse-glow { animation: pulse-glow 2.5s ease-in-out infinite; }
         .gradient-animate { background-size: 200% 200%; animation: gradient-shift 4s ease infinite; }
         .cta-button { transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-        .cta-button:hover { transform: scale(1.05) translateY(-2px); box-shadow: 0 20px 40px rgba(37, 99, 235, 0.4); }
+        .cta-button:hover { transform: scale(1.06) translateY(-3px); box-shadow: 0 25px 50px rgba(37, 99, 235, 0.45), 0 0 0 1px rgba(37, 99, 235, 0.3); }
+        .cta-button:active { transform: scale(0.98) translateY(0); }
         .feature-card { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        .feature-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 25px 50px rgba(0,0,0,0.12), 0 0 0 1px rgba(37, 99, 235, 0.1); }
+        .feature-card:hover { transform: translateY(-10px) scale(1.03); box-shadow: 0 30px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(37, 99, 235, 0.15), 0 0 40px rgba(37, 99, 235, 0.1); }
+        .feature-card:hover .feature-icon { transform: scale(1.15) rotate(-5deg); }
+        .feature-icon { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .pricing-card { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        .pricing-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 25px 50px rgba(0,0,0,0.15), 0 0 0 1px var(--primary); }
+        .pricing-card:hover { transform: translateY(-12px) scale(1.04); box-shadow: 0 30px 60px rgba(0,0,0,0.18), 0 0 0 1px var(--primary), 0 0 50px rgba(37, 99, 235, 0.15); }
         .testimonial-card { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        .testimonial-card:hover { transform: scale(1.02) translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .testimonial-card:hover { transform: scale(1.03) translateY(-6px); box-shadow: 0 25px 50px rgba(0,0,0,0.12); }
         .stat-item { transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
-        .stat-item:hover { transform: scale(1.05); }
+        .stat-item:hover { transform: scale(1.08); }
+        .stat-item:hover .stat-value { transform: scale(1.05); }
+        .stat-value { transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
         .trusted-logo { transition: all 0.3s ease; }
-        .trusted-logo:hover { transform: scale(1.1); opacity: 1; }
-        .navbar-scrolled { background: rgba(255,255,255,0.98) !important; box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important; }
-        .scroll-indicator { animation: float 2s ease-in-out infinite; }
+        .trusted-logo:hover { transform: scale(1.15); opacity: 1 !important; }
+        .navbar-scrolled { background: rgba(255,255,255,0.98) !important; box-shadow: 0 8px 32px rgba(0,0,0,0.1) !important; backdrop-filter: blur(24px) !important; }
+        .scroll-indicator { animation: bounce 2s ease-in-out infinite; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .glass-dark { background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .card-glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        .card-elevated { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05); }
+        .electric-blue { color: #2563EB; }
+        .bg-electric-blue { background: #2563EB; }
+        .progress-bar { animation: progress 1.5s ease-out forwards; }
+        .activity-item { transition: all 0.3s ease; }
+        .activity-item:hover { background: rgba(37, 99, 235, 0.05); transform: translateX(4px); }
+        .task-item { transition: all 0.3s ease; }
+        .task-item:hover { transform: translateX(6px); background: rgba(37, 99, 235, 0.05); }
+        .sidebar-item { transition: all 0.3s ease; }
+        .sidebar-item:hover { background: rgba(37, 99, 235, 0.08); }
+        .sidebar-item.active { background: rgba(37, 99, 235, 0.12); box-shadow: inset 3px 0 0 #2563EB; }
+        .sidebar-item.active .sidebar-icon { color: #2563EB; }
+        .metric-card { transition: all 0.4s ease; }
+        .metric-card:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .chart-bar { transition: all 0.4s ease; }
+        .chart-bar:hover { fill: #2563EB; transform: scaleY(1.05); }
       `}</style>
 
       {/* Navbar */}
       <header className={scrolled ? 'navbar-scrolled' : ''} style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-        background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: '1px solid var(--border)', padding: '0 48px', height: '72px',
+        background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)',
+        borderBottom: '1px solid rgba(229, 231, 235, 0.5)', padding: '0 48px', height: '72px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        transition: 'all 0.3s ease'
+        transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <div style={{
-            width: '40px', height: '40px', background: 'linear-gradient(135deg, var(--primary), var(--accent))',
-            borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white',
-            boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)'
+            width: '44px', height: '44px', background: 'linear-gradient(135deg, #2563EB 0%, #06B6D4 100%)',
+            borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white',
+            boxShadow: '0 4px 16px rgba(37, 99, 235, 0.35)'
           }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /><path d="M2 12h20" />
             </svg>
           </div>
-          <span style={{ fontFamily: 'var(--font-heading)', fontWeight: '800', fontSize: '1.375rem', color: 'var(--text)' }}>Orbit</span>
+          <span style={{ fontFamily: 'var(--font-heading)', fontWeight: '800', fontSize: '1.5rem', color: 'var(--text)' }}>Orbit</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <Link to="/login" className="btn btn-secondary" style={{ padding: '10px 20px', fontSize: '0.9375rem' }}>Sign In</Link>
-          <Link to="/register" className="btn btn-primary" style={{ padding: '10px 20px', fontSize: '0.9375rem' }}>Get Started Free</Link>
+          <Link to="/login" className="btn btn-secondary" style={{ padding: '12px 24px', fontSize: '1rem', fontWeight: '600' }}>Sign In</Link>
+          <Link to="/register" className="btn btn-primary" style={{ padding: '12px 24px', fontSize: '1rem', fontWeight: '600' }}>Get Started Free</Link>
         </div>
       </header>
 
       {/* Hero Section */}
       <section style={{
-        padding: '140px 48px 100px', textAlign: 'center', minHeight: '100vh',
-        background: 'linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%)',
-        position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center'
+        padding: '150px 48px 80px', textAlign: 'center', minHeight: '100vh',
+        background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%)',
+        position: 'relative', overflow: 'hidden'
       }}>
-        {/* Animated background orbs */}
+        {/* Animated orbs */}
         <div className="orb-1" style={{
-          position: 'absolute', top: '5%', left: '-5%', width: '500px', height: '500px',
-          background: 'radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, transparent 70%)', borderRadius: '50%', filter: 'blur(80px)'
+          position: 'absolute', top: '0%', left: '-10%', width: '600px', height: '600px',
+          background: 'radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, transparent 60%)', borderRadius: '50%', filter: 'blur(100px)'
         }} />
         <div className="orb-2" style={{
-          position: 'absolute', bottom: '10%', right: '-10%', width: '600px', height: '600px',
-          background: 'radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%)', borderRadius: '50%', filter: 'blur(80px)'
+          position: 'absolute', bottom: '10%', right: '-15%', width: '700px', height: '700px',
+          background: 'radial-gradient(circle, rgba(6, 182, 212, 0.12) 0%, transparent 60%)', borderRadius: '50%', filter: 'blur(100px)'
         }} />
         <div className="orb-3" style={{
-          position: 'absolute', top: '40%', left: '50%', transform: 'translateX(-50%)', width: '400px', height: '400px',
-          background: 'radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, transparent 70%)', borderRadius: '50%', filter: 'blur(60px)'
+          position: 'absolute', top: '30%', left: '50%', transform: 'translateX(-50%)', width: '400px', height: '400px',
+          background: 'radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 60%)', borderRadius: '50%', filter: 'blur(80px)'
         }} />
 
         <div style={{ maxWidth: '900px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div className="hero-badge badge badge-accent" style={{
-            marginBottom: '28px', display: 'inline-flex', alignItems: 'center', gap: '10px',
-            padding: '10px 20px', fontSize: '0.9375rem', fontWeight: '600',
-            borderRadius: '100px', border: '1px solid rgba(6, 182, 212, 0.3)'
+          <div className="hero-badge" style={{
+            marginBottom: '32px', display: 'inline-flex', alignItems: 'center', gap: '12px',
+            padding: '12px 24px', fontSize: '1rem', fontWeight: '700',
+            background: 'rgba(37, 99, 235, 0.08)', border: '1px solid rgba(37, 99, 235, 0.2)',
+            borderRadius: '100px', color: '#2563EB'
           }}>
-            <Sparkles size={18} />
+            <Sparkles size={20} />
             New: AI-Powered Automation & Guest Portals
           </div>
 
           <h1 className="hero-title" style={{
-            fontSize: 'clamp(3rem, 7vw, 4.5rem)', fontWeight: '800', fontFamily: 'var(--font-heading)',
-            color: 'var(--text)', lineHeight: '1.05', marginBottom: '28px', letterSpacing: '-0.02em',
-            background: 'linear-gradient(135deg, var(--text) 30%, var(--primary) 100%)',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'
+            fontSize: 'clamp(3rem, 7vw, 4.5rem)', fontWeight: '900', fontFamily: 'var(--font-heading)',
+            color: '#0f172a', lineHeight: '1.05', marginBottom: '28px', letterSpacing: '-0.03em'
           }}>
-            The project management tool
-            <br />your team will actually use
+            <span style={{ background: 'linear-gradient(135deg, #0f172a 40%, #2563EB 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+              The project management tool
+            </span>
+            <br />
+            <span style={{ background: 'linear-gradient(135deg, #2563EB 0%, #06B6D4 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+              your team will actually use
+            </span>
           </h1>
 
           <p className="hero-subtitle" style={{
-            fontSize: 'clamp(1.125rem, 2.5vw, 1.375rem)', color: 'var(--text-secondary)',
-            lineHeight: '1.7', marginBottom: '44px', maxWidth: '680px', margin: '0 auto 44px'
+            fontSize: 'clamp(1.125rem, 2.5vw, 1.375rem)', color: '#475569',
+            lineHeight: '1.65', marginBottom: '48px', maxWidth: '680px', margin: '0 auto 48px'
           }}>
             Task tracking, time management, analytics, and integrations — all in one place.
-            <br />No complicated setup, no steep learning curve.
+            <br /><strong style={{ color: '#0f172a' }}>No complicated setup, no steep learning curve.</strong>
           </p>
 
           <div className="hero-buttons" style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link to="/register" className="cta-button pulse-glow" style={{
-              display: 'inline-flex', alignItems: 'center', gap: '10px',
-              padding: '18px 36px', fontSize: '1.0625rem', fontWeight: '700',
-              background: 'linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%)',
-              color: 'white', borderRadius: '14px', textDecoration: 'none',
-              boxShadow: '0 8px 30px rgba(37, 99, 235, 0.4)'
+              display: 'inline-flex', alignItems: 'center', gap: '12px',
+              padding: '20px 40px', fontSize: '1.125rem', fontWeight: '700',
+              background: 'linear-gradient(135deg, #2563EB 0%, #1d4ed8 100%)',
+              color: 'white', borderRadius: '16px', textDecoration: 'none',
+              boxShadow: '0 12px 40px rgba(37, 99, 235, 0.4)'
             }}>
-              Start Free Trial <ArrowRight size={20} />
+              Start Free Trial <ArrowRight size={22} />
             </Link>
-            <Link to="/login" className="btn btn-secondary" style={{
-              padding: '18px 36px', fontSize: '1.0625rem', fontWeight: '600',
-              borderRadius: '14px', display: 'inline-flex', alignItems: 'center', gap: '10px'
+            <Link to="/login" style={{
+              display: 'inline-flex', alignItems: 'center', gap: '10px',
+              padding: '20px 40px', fontSize: '1.125rem', fontWeight: '600',
+              background: 'white', color: '#0f172a', borderRadius: '16px', textDecoration: 'none',
+              border: '2px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
             }}>
-              <Play size={18} style={{ fill: 'currentColor' }} /> Watch Demo
+              <Play size={20} style={{ fill: '#2563EB' }} /> Watch Demo
             </Link>
           </div>
         </div>
 
-        {/* Dashboard Preview */}
+        {/* Enhanced Dashboard Preview */}
         <div className="hero-image" style={{
-          width: '100%', maxWidth: '1100px', margin: '60px auto 0',
-          background: 'var(--surface)', borderRadius: '24px',
-          boxShadow: '0 40px 100px rgba(0,0,0,0.2), 0 0 0 1px var(--border)',
-          overflow: 'hidden', position: 'relative', zIndex: 1
+          width: '100%', maxWidth: '1200px', margin: '60px auto 0',
+          background: 'rgba(255, 255, 255, 0.9)', backdropFilter: 'blur(20px)',
+          borderRadius: '28px', boxShadow: '0 50px 120px rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.05)',
+          border: '1px solid rgba(255,255,255,0.8)', overflow: 'hidden', position: 'relative', zIndex: 1
         }}>
-          <div style={{ background: 'var(--bg)', padding: '20px', borderBottom: '1px solid var(--border)' }}>
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
-              {['#FF5F56', '#FFBD2E', '#27C93F'].map((c, i) => <div key={i} style={{ width: '12px', height: '12px', borderRadius: '50%', background: c }} />)}
+          {/* Browser chrome */}
+          <div style={{ background: 'linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)', padding: '16px 20px', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              {['#FF5F56', '#FFBD2E', '#27C93F'].map((c, i) => <div key={i} style={{ width: '14px', height: '14px', borderRadius: '50%', background: c }} />)}
+            </div>
+            <div style={{ flex: 1, height: '36px', background: 'white', borderRadius: '8px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', padding: '0 16px', gap: '8px' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><circle cx="12" cy="12" r="10" /><path d="M2 12h20" /></svg>
+              <span style={{ fontSize: '0.8125rem', color: '#94a3b8' }}>app.orbit.com/dashboard</span>
             </div>
           </div>
-          <div style={{ display: 'flex', minHeight: '400px' }}>
+
+          <div style={{ display: 'flex', minHeight: '480px' }}>
             {/* Sidebar */}
-            <div style={{ width: '220px', background: 'var(--surface)', borderRight: '1px solid var(--border)', padding: '20px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px', padding: '10px', background: 'var(--primary-light)', borderRadius: '10px' }}>
-                <div style={{ width: '28px', height: '28px', background: 'linear-gradient(135deg, var(--primary), var(--accent))', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><circle cx="12" cy="12" r="10" /><path d="M2 12h20" /></svg>
+            <div style={{ width: '260px', background: 'white', borderRight: '1px solid #e2e8f0', padding: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '28px', padding: '12px', background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(6, 182, 212, 0.08) 100%)', borderRadius: '12px', border: '1px solid rgba(37, 99, 235, 0.1)' }}>
+                <div style={{ width: '36px', height: '36px', background: 'linear-gradient(135deg, #2563EB, #06B6D4)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><circle cx="12" cy="12" r="10" /><path d="M2 12h20" /></svg>
                 </div>
-                <span style={{ fontWeight: '700', fontSize: '0.875rem' }}>Orbit</span>
+                <div>
+                  <div style={{ fontWeight: '800', fontSize: '0.9375rem', color: '#0f172a' }}>Orbit</div>
+                  <div style={{ fontSize: '0.6875rem', color: '#64748b' }}>Workspace</div>
+                </div>
               </div>
-              {['Dashboard', 'Projects', 'Tasks', 'Time', 'Analytics', 'Settings'].map((item, i) => (
-                <div key={item} style={{
-                  padding: '10px 12px', borderRadius: '8px', marginBottom: '4px', fontSize: '0.8125rem',
-                  fontWeight: i === 0 ? '600' : '500', color: i === 0 ? 'var(--primary)' : 'var(--text-secondary)',
-                  background: i === 0 ? 'var(--primary-light)' : 'transparent',
-                  cursor: 'pointer'
-                }}>{item}</div>
+              
+              {[
+                { icon: Grid, label: 'Dashboard', active: true },
+                { icon: Folder, label: 'Projects' },
+                { icon: Target, label: 'Tasks' },
+                { icon: Clock, label: 'Time' },
+                { icon: BarChart3, label: 'Analytics' },
+                { icon: Users, label: 'Team' },
+                { icon: Settings, label: 'Settings' },
+              ].map((item, i) => (
+                <div key={i} className={`sidebar-item ${item.active ? 'active' : ''}`} style={{
+                  padding: '12px 16px', borderRadius: '10px', marginBottom: '4px', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.875rem',
+                  fontWeight: item.active ? '700' : '500', color: item.active ? '#2563EB' : '#475569',
+                  background: item.active ? 'rgba(37, 99, 235, 0.08)' : 'transparent',
+                  boxShadow: item.active ? 'inset 3px 0 0 #2563EB' : 'none'
+                }}>
+                  <item.icon size={18} className="sidebar-icon" style={{ color: item.active ? '#2563EB' : '#94a3b8' }} />
+                  {item.label}
+                </div>
               ))}
-            </div>
-            {/* Main content */}
-            <div style={{ flex: 1, padding: '24px', background: 'var(--bg)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: '700' }}>Sprint Dashboard</h3>
-                <div style={{ padding: '8px 16px', background: 'var(--primary)', color: 'white', borderRadius: '8px', fontSize: '0.8125rem', fontWeight: '600' }}>+ New Task</div>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
-                {[
-                  { title: 'To Do', color: 'var(--text-muted)', tasks: 8 },
-                  { title: 'In Progress', color: 'var(--primary)', tasks: 5 },
-                  { title: 'Done', color: '#10b981', tasks: 12 }
-                ].map((col) => (
-                  <div key={col.title} style={{ background: 'var(--surface)', borderRadius: '12px', padding: '16px', border: '1px solid var(--border)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                      <span style={{ fontSize: '0.8125rem', fontWeight: '700', color: col.color }}>{col.title}</span>
-                      <span style={{ fontSize: '0.75rem', fontWeight: '600', background: 'var(--bg)', padding: '2px 8px', borderRadius: '100px' }}>{col.tasks}</span>
+
+              {/* Team avatars */}
+              <div style={{ marginTop: '24px', padding: '16px', background: '#f8fafc', borderRadius: '12px' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: '600', color: '#64748b', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Online Now</div>
+                <div style={{ display: 'flex' }}>
+                  {teamMembers.map((m, i) => (
+                    <div key={i} style={{ width: '32px', height: '32px', borderRadius: '50%', background: m.color, border: '2px solid white', marginLeft: i > 0 ? '-8px' : '0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.6875rem', fontWeight: '700' }}>
+                      {m.avatar}
                     </div>
-                    {[1, 2, 3].map((task) => (
-                      <div key={task} style={{ background: 'var(--bg)', borderRadius: '8px', height: '48px', marginBottom: '8px', display: 'flex', alignItems: 'center', padding: '0 12px' }}>
-                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: col.color === 'var(--text-muted)' ? 'var(--border)' : col.color, marginRight: '10px' }} />
-                        <div style={{ flex: 1, height: '8px', background: 'var(--border)', borderRadius: '4px', opacity: 0.5 }} />
+                  ))}
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#e2e8f0', border: '2px solid white', marginLeft: '-8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b', fontSize: '0.6875rem', fontWeight: '600' }}>+8</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Main content */}
+            <div style={{ flex: 1, padding: '24px', background: '#f8fafc' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                <div>
+                  <h3 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a', marginBottom: '4px' }}>Good morning, Alex! 👋</h3>
+                  <p style={{ fontSize: '0.875rem', color: '#64748b' }}>Here's what's happening with your projects today.</p>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <div style={{ padding: '10px 16px', background: 'white', borderRadius: '10px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8125rem', color: '#64748b' }}>
+                    <BellIcon size={16} /> <span>3</span>
+                  </div>
+                  <div style={{ padding: '10px 16px', background: '#2563EB', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8125rem', color: 'white', fontWeight: '600' }}>
+                    <Plus size={16} /> New Task
+                  </div>
+                </div>
+              </div>
+
+              {/* Metrics row */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
+                {[
+                  { label: 'Active Tasks', value: '24', change: '+12%', up: true, icon: Target },
+                  { label: 'Completed', value: '156', change: '+8%', up: true, icon: CheckCircle },
+                  { label: 'Team Velocity', value: '89%', change: '-3%', up: false, icon: TrendingUp },
+                  { label: 'Hours Tracked', value: '42h', change: '+18%', up: true, icon: Clock },
+                ].map((metric, i) => (
+                  <div key={i} className="metric-card" style={{ background: 'white', borderRadius: '16px', padding: '20px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+                      <span style={{ fontSize: '0.75rem', fontWeight: '600', color: '#64748b' }}>{metric.label}</span>
+                      <metric.icon size={16} style={{ color: '#2563EB' }} />
+                    </div>
+                    <div style={{ fontSize: '1.75rem', fontWeight: '800', color: '#0f172a', marginBottom: '8px' }}>{metric.value}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', color: metric.up ? '#059669' : '#dc2626', fontWeight: '600' }}>
+                      {metric.up ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
+                      {metric.change} vs last week
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Kanban board */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+                {[
+                  { title: 'To Do', color: '#64748b', count: 8, tasks: ['Design system updates', 'API documentation', 'User research synthesis'] },
+                  { title: 'In Progress', color: '#2563EB', count: 5, tasks: ['Dashboard redesign', 'Auth flow improvements', 'Performance optimization'] },
+                  { title: 'Done', color: '#059669', count: 12, tasks: ['Landing page', 'Onboarding flow', 'CI/CD setup'] },
+                ].map((col) => (
+                  <div key={col.title} style={{ background: 'white', borderRadius: '16px', padding: '20px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: col.color }} />
+                        <span style={{ fontSize: '0.9375rem', fontWeight: '700', color: '#0f172a' }}>{col.title}</span>
+                      </div>
+                      <span style={{ fontSize: '0.75rem', fontWeight: '700', background: '#f1f5f9', padding: '4px 10px', borderRadius: '100px', color: '#64748b' }}>{col.count}</span>
+                    </div>
+                    {col.tasks.map((task, i) => (
+                      <div key={i} style={{ background: '#f8fafc', borderRadius: '10px', padding: '14px', marginBottom: '10px', border: '1px solid #e2e8f0' }}>
+                        <div style={{ fontSize: '0.875rem', fontWeight: '600', color: '#0f172a', marginBottom: '8px' }}>{task}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ flex: 1, height: '4px', background: '#e2e8f0', borderRadius: '2px', overflow: 'hidden' }}>
+                            <div style={{ width: `${60 + i * 15}%`, height: '100%', background: col.color, borderRadius: '2px' }} />
+                          </div>
+                          <span style={{ fontSize: '0.6875rem', fontWeight: '600', color: '#94a3b8' }}>{60 + i * 15}%</span>
+                        </div>
                       </div>
                     ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Activity sidebar */}
+            <div style={{ width: '280px', background: 'white', borderLeft: '1px solid #e2e8f0', padding: '20px' }}>
+              <h4 style={{ fontSize: '0.9375rem', fontWeight: '700', color: '#0f172a', marginBottom: '20px' }}>Recent Activity</h4>
+              {activityItems.map((item, i) => (
+                <div key={i} className="activity-item" style={{ display: 'flex', gap: '12px', marginBottom: '16px', padding: '12px', borderRadius: '10px', cursor: 'pointer' }}>
+                  <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, #2563EB, #06B6D4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.75rem', fontWeight: '700', flexShrink: 0 }}>
+                    {item.user.charAt(0)}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontSize: '0.8125rem', color: '#0f172a', marginBottom: '2px' }}>
+                      <strong>{item.user}</strong> {item.action}
+                    </p>
+                    <p style={{ fontSize: '0.75rem', color: '#2563EB', fontWeight: '600' }}>{item.target}</p>
+                    <p style={{ fontSize: '0.6875rem', color: '#94a3b8', marginTop: '4px' }}>{item.time}</p>
+                  </div>
+                </div>
+              ))}
+
+              <div style={{ marginTop: '24px' }}>
+                <h4 style={{ fontSize: '0.9375rem', fontWeight: '700', color: '#0f172a', marginBottom: '16px' }}>Upcoming Tasks</h4>
+                {upcomingTasks.map((task, i) => (
+                  <div key={i} className="task-item" style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', marginBottom: '10px', cursor: 'pointer' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                      <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: task.priority === 'high' ? '#dc2626' : task.priority === 'medium' ? '#f59e0b' : '#10b981' }} />
+                      <span style={{ fontSize: '0.875rem', fontWeight: '600', color: '#0f172a' }}>{task.title}</span>
+                    </div>
+                    <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Due: {task.due}</span>
                   </div>
                 ))}
               </div>
@@ -264,28 +428,22 @@ const Home: React.FC = () => {
         </div>
 
         {/* Scroll indicator */}
-        <div className="scroll-indicator" style={{ position: 'absolute', bottom: '30px', left: '50%', transform: 'translateX(-50%)', color: 'var(--text-muted)' }}>
-          <ChevronDown size={28} />
+        <div className="scroll-indicator" style={{ position: 'absolute', bottom: '30px', left: '50%', transform: 'translateX(-50%)', color: '#94a3b8' }}>
+          <ChevronDown size={32} />
         </div>
       </section>
 
-      {/* Trusted By Section */}
-      <section style={{ padding: '48px 48px', background: 'var(--surface)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
-        <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
-          <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '24px', fontWeight: '600' }}>
+      {/* Trusted By */}
+      <section style={{ padding: '56px 48px', background: 'white', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
+          <p style={{ fontSize: '0.8125rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '28px', fontWeight: '700' }}>
             Trusted by forward-thinking teams
           </p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '48px', flexWrap: 'wrap', alignItems: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '56px', flexWrap: 'wrap', alignItems: 'center' }}>
             {trustedByLogos.map((logo) => (
-              <div key={logo.name} className="trusted-logo" style={{ opacity: 0.5, cursor: 'pointer' }}>
-                <div style={{
-                  display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.125rem', fontWeight: '800',
-                  color: 'var(--text-secondary)', fontFamily: 'var(--font-heading)'
-                }}>
-                  <div style={{
-                    width: '36px', height: '36px', background: 'var(--bg)', borderRadius: '8px',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: '700'
-                  }}>{logo.logo}</div>
+              <div key={logo.name} className="trusted-logo" style={{ opacity: 0.4, cursor: 'pointer' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.25rem', fontWeight: '800', color: '#475569', fontFamily: 'var(--font-heading)' }}>
+                  <div style={{ width: '40px', height: '40px', background: '#f1f5f9', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8125rem', fontWeight: '800' }}>{logo.logo}</div>
                   {logo.name}
                 </div>
               </div>
@@ -294,49 +452,49 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section data-section="stats" style={{ padding: '80px 48px', background: 'var(--surface)' }}>
-        <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '40px', textAlign: 'center' }}>
+      {/* Stats */}
+      <section data-section="stats" style={{ padding: '80px 48px', background: 'white' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '48px', textAlign: 'center' }}>
           {stats.map((stat, index) => (
             <div key={index} className={`stat-item animate-on-scroll stagger-${index + 1} ${visibleSections.has('stats') ? 'visible' : ''}`}>
-              <div style={{ fontSize: '3rem', fontWeight: '800', fontFamily: 'var(--font-heading)', marginBottom: '8px', background: 'linear-gradient(135deg, var(--primary), var(--accent))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{stat.value}</div>
-              <div style={{ fontSize: '0.9375rem', color: 'var(--text-secondary)' }}>{stat.label}</div>
+              <div className="stat-value" style={{ fontSize: '3.5rem', fontWeight: '900', fontFamily: 'var(--font-heading)', marginBottom: '8px', background: 'linear-gradient(135deg, #2563EB 0%, #06B6D4 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{stat.value}</div>
+              <div style={{ fontSize: '1rem', color: '#64748b', fontWeight: '500' }}>{stat.label}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Features Section */}
-      <section data-section="features" style={{ padding: '100px 48px', background: 'var(--bg)' }}>
+      {/* Features */}
+      <section data-section="features" style={{ padding: '100px 48px', background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 100%)' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div className={`animate-on-scroll ${visibleSections.has('features') ? 'visible' : ''}`} style={{ textAlign: 'center', marginBottom: '64px' }}>
-            <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: '800', fontFamily: 'var(--font-heading)', marginBottom: '20px', letterSpacing: '-0.02em' }}>
+          <div className={`animate-on-scroll ${visibleSections.has('features') ? 'visible' : ''}`} style={{ textAlign: 'center', marginBottom: '72px' }}>
+            <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: '900', fontFamily: 'var(--font-heading)', marginBottom: '20px', letterSpacing: '-0.02em', color: '#0f172a' }}>
               Everything you need to ship faster
             </h2>
-            <p style={{ fontSize: '1.125rem', color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto', lineHeight: '1.7' }}>
+            <p style={{ fontSize: '1.125rem', color: '#475569', maxWidth: '650px', margin: '0 auto', lineHeight: '1.7' }}>
               From small teams to enterprises, Orbit scales with you. All the features you need, none of the complexity.
             </p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '28px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '28px' }}>
             {features.map((feature, index) => (
-              <div key={index} className={`feature-card animate-on-scroll stagger-${index + 1} ${visibleSections.has('features') ? 'visible' : ''}`} style={{ background: 'var(--surface)', borderRadius: '20px', border: '1px solid var(--border)', padding: '36px', cursor: 'pointer' }}>
-                <div style={{ width: '60px', height: '60px', background: 'var(--primary-light)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
-                  <feature.icon size={30} style={{ color: 'var(--primary)' }} />
+              <div key={index} className={`feature-card animate-on-scroll stagger-${index + 1} ${visibleSections.has('features') ? 'visible' : ''}`} style={{ background: 'white', borderRadius: '24px', border: '1px solid #e2e8f0', padding: '40px', cursor: 'pointer' }}>
+                <div className="feature-icon" style={{ width: '64px', height: '64px', background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%)', borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '28px' }}>
+                  <feature.icon size={32} style={{ color: '#2563EB' }} />
                 </div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '12px', color: 'var(--text)' }}>{feature.title}</h3>
-                <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.7' }}>{feature.description}</p>
+                <h3 style={{ fontSize: '1.375rem', fontWeight: '800', marginBottom: '14px', color: '#0f172a' }}>{feature.title}</h3>
+                <p style={{ fontSize: '1.0625rem', color: '#475569', lineHeight: '1.7' }}>{feature.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section data-section="pricing" style={{ padding: '100px 48px', background: 'var(--surface)' }}>
+      {/* Pricing */}
+      <section data-section="pricing" style={{ padding: '100px 48px', background: 'white' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
           <div className={`animate-on-scroll ${visibleSections.has('pricing') ? 'visible' : ''}`}>
-            <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: '800', fontFamily: 'var(--font-heading)', marginBottom: '20px', letterSpacing: '-0.02em' }}>Simple, transparent pricing</h2>
-            <p style={{ fontSize: '1.125rem', color: 'var(--text-secondary)', marginBottom: '56px' }}>Start free, upgrade when you're ready to scale.</p>
+            <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: '900', fontFamily: 'var(--font-heading)', marginBottom: '20px', letterSpacing: '-0.02em' }}>Simple, transparent pricing</h2>
+            <p style={{ fontSize: '1.125rem', color: '#475569', marginBottom: '56px' }}>Start free, upgrade when you're ready to scale.</p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '28px', textAlign: 'left' }}>
             {[
@@ -344,14 +502,14 @@ const Home: React.FC = () => {
               { name: 'Pro', price: '$19', features: ['Unlimited projects', 'Unlimited members', 'Time tracking', 'Analytics dashboard', 'Slack + GitHub', '50GB storage'], popular: true },
               { name: 'Enterprise', price: '$49', features: ['Everything in Pro', 'Automation rules', 'Guest portals', 'Priority support', '200GB storage'], popular: false }
             ].map((plan, i) => (
-              <div key={plan.name} className={`pricing-card animate-on-scroll stagger-${i + 1} ${visibleSections.has('pricing') ? 'visible' : ''}`} style={{ background: 'var(--surface)', borderRadius: '24px', border: plan.popular ? '2px solid var(--primary)' : '1px solid var(--border)', padding: '36px', position: 'relative', transform: plan.popular ? 'scale(1.03)' : 'scale(1)' }}>
-                {plan.popular && <div style={{ position: 'absolute', top: '-14px', left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, var(--primary), var(--accent))', color: 'white', padding: '6px 20px', borderRadius: '100px', fontSize: '0.8125rem', fontWeight: '700' }}>Most Popular</div>}
-                <h3 style={{ fontSize: '0.875rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>{plan.name}</h3>
-                <div style={{ fontSize: '3.5rem', fontWeight: '800', marginBottom: '28px' }}>{plan.price}<span style={{ fontSize: '1.25rem', fontWeight: '400', color: 'var(--text-muted)' }}>/mo</span></div>
-                <ul style={{ listStyle: 'none', marginBottom: '32px' }}>
-                  {plan.features.map((f, j) => <li key={j} style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px', fontSize: '0.9375rem', color: 'var(--text-secondary)' }}><div style={{ width: '20px', height: '20px', background: 'rgba(16, 185, 129, 0.15)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Check size={12} style={{ color: '#10b981' }} /></div>{f}</li>)}
+              <div key={plan.name} className={`pricing-card animate-on-scroll stagger-${i + 1} ${visibleSections.has('pricing') ? 'visible' : ''}`} style={{ background: 'white', borderRadius: '24px', border: plan.popular ? '2px solid #2563EB' : '1px solid #e2e8f0', padding: '40px', position: 'relative', transform: plan.popular ? 'scale(1.04)' : 'scale(1)' }}>
+                {plan.popular && <div style={{ position: 'absolute', top: '-16px', left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #2563EB, #06B6D4)', color: 'white', padding: '8px 24px', borderRadius: '100px', fontSize: '0.8125rem', fontWeight: '700', whiteSpace: 'nowrap' }}>Most Popular</div>}
+                <h3 style={{ fontSize: '0.875rem', fontWeight: '800', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>{plan.name}</h3>
+                <div style={{ fontSize: '4rem', fontWeight: '900', marginBottom: '32px', color: '#0f172a' }}>{plan.price}<span style={{ fontSize: '1.5rem', fontWeight: '500', color: '#94a3b8' }}>/mo</span></div>
+                <ul style={{ listStyle: 'none', marginBottom: '36px' }}>
+                  {plan.features.map((f, j) => <li key={j} style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '16px', fontSize: '1rem', color: '#475569' }}><div style={{ width: '24px', height: '24px', background: 'rgba(16, 185, 129, 0.12)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Check size={14} style={{ color: '#059669' }} /></div>{f}</li>)}
                 </ul>
-                <button className={`btn ${plan.popular ? 'btn-primary' : 'btn-secondary'}`} style={{ width: '100%', padding: '16px' }}>{plan.popular ? 'Start Pro Trial' : plan.name === 'Enterprise' ? 'Contact Sales' : 'Get Started'}</button>
+                <button className={`btn ${plan.popular ? 'btn-primary' : 'btn-secondary'}`} style={{ width: '100%', padding: '18px' }}>{plan.popular ? 'Start Pro Trial' : plan.name === 'Enterprise' ? 'Contact Sales' : 'Get Started'}</button>
               </div>
             ))}
           </div>
@@ -359,20 +517,20 @@ const Home: React.FC = () => {
       </section>
 
       {/* Testimonials */}
-      <section data-section="testimonials" style={{ padding: '100px 48px', background: 'var(--bg)' }}>
+      <section data-section="testimonials" style={{ padding: '100px 48px', background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 100%)' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div className={`animate-on-scroll ${visibleSections.has('testimonials') ? 'visible' : ''}`}>
-            <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: '800', fontFamily: 'var(--font-heading)', textAlign: 'center', marginBottom: '56px' }}>Loved by teams everywhere</h2>
+            <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: '900', fontFamily: 'var(--font-heading)', textAlign: 'center', marginBottom: '56px' }}>Loved by teams everywhere</h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '28px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '28px' }}>
             {testimonials.map((t, i) => (
-              <div key={i} className={`testimonial-card animate-on-scroll stagger-${i + 1} ${visibleSections.has('testimonials') ? 'visible' : ''}`} style={{ background: 'var(--surface)', borderRadius: '20px', border: '1px solid var(--border)', padding: '36px' }}>
-                <div style={{ display: 'flex', gap: '4px', marginBottom: '16px' }}>{[...Array(t.rating)].map((_, j) => <Star key={j} size={18} style={{ fill: '#fbbf24', color: '#fbbf24' }} />)}</div>
-                <Quote size={32} style={{ color: 'var(--primary)', opacity: 0.3, marginBottom: '16px' }} />
-                <p style={{ fontSize: '1.0625rem', color: 'var(--text-secondary)', lineHeight: '1.7', marginBottom: '28px' }}>"{t.text}"</p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                  <div style={{ width: '52px', height: '52px', background: 'linear-gradient(135deg, var(--primary), var(--accent))', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '700', fontSize: '1.25rem' }}>{t.name.charAt(0)}</div>
-                  <div><p style={{ fontWeight: '700', fontSize: '1rem', color: 'var(--text)' }}>{t.name}</p><p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{t.role}</p></div>
+              <div key={i} className={`testimonial-card animate-on-scroll stagger-${i + 1} ${visibleSections.has('testimonials') ? 'visible' : ''}`} style={{ background: 'white', borderRadius: '24px', border: '1px solid #e2e8f0', padding: '40px' }}>
+                <div style={{ display: 'flex', gap: '4px', marginBottom: '20px' }}>{[...Array(t.rating)].map((_, j) => <Star key={j} size={20} style={{ fill: '#fbbf24', color: '#fbbf24' }} />)}</div>
+                <Quote size={36} style={{ color: '#2563EB', opacity: 0.2, marginBottom: '20px' }} />
+                <p style={{ fontSize: '1.125rem', color: '#475569', lineHeight: '1.7', marginBottom: '28px' }}>"{t.text}"</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div style={{ width: '56px', height: '56px', background: 'linear-gradient(135deg, #2563EB, #06B6D4)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '800', fontSize: '1.25rem' }}>{t.name.charAt(0)}</div>
+                  <div><p style={{ fontWeight: '700', fontSize: '1.0625rem', color: '#0f172a' }}>{t.name}</p><p style={{ fontSize: '0.875rem', color: '#64748b' }}>{t.role}</p></div>
                 </div>
               </div>
             ))}
@@ -380,27 +538,27 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="gradient-animate" style={{ padding: '120px 48px', textAlign: 'center', background: 'linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%)' }}>
+      {/* CTA */}
+      <section className="gradient-animate" style={{ padding: '120px 48px', textAlign: 'center', background: 'linear-gradient(135deg, #2563EB 0%, #1d4ed8 50%, #06B6D4 100%)', backgroundSize: '200% 200%' }}>
         <div className="animate-on-scroll" style={{ maxWidth: '700px', margin: '0 auto' }}>
-          <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: '800', fontFamily: 'var(--font-heading)', color: 'white', marginBottom: '24px' }}>Ready to streamline your workflow?</h2>
+          <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: '900', fontFamily: 'var(--font-heading)', color: 'white', marginBottom: '24px' }}>Ready to streamline your workflow?</h2>
           <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '1.25rem', marginBottom: '48px' }}>Join thousands of teams using Orbit to ship faster.</p>
-          <Link to="/register" className="cta-button" style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', background: 'white', color: 'var(--primary)', fontWeight: '700', padding: '20px 40px', borderRadius: '14px', textDecoration: 'none', fontSize: '1.125rem' }}>
-            Get Started Free <ArrowRight size={22} />
+          <Link to="/register" className="cta-button" style={{ display: 'inline-flex', alignItems: 'center', gap: '14px', background: 'white', color: '#2563EB', fontWeight: '800', padding: '22px 48px', borderRadius: '16px', textDecoration: 'none', fontSize: '1.25rem', boxShadow: '0 20px 50px rgba(0,0,0,0.2)' }}>
+            Get Started Free <ArrowRight size={24} />
           </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer style={{ padding: '60px 48px', background: 'var(--surface)', borderTop: '1px solid var(--border)' }}>
+      <footer style={{ padding: '64px 48px', background: 'white', borderTop: '1px solid #e2e8f0' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ width: '36px', height: '36px', background: 'linear-gradient(135deg, var(--primary), var(--accent))', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10" /><path d="M2 12h20" /></svg>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <div style={{ width: '40px', height: '40px', background: 'linear-gradient(135deg, #2563EB, #06B6D4)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10" /><path d="M2 12h20" /></svg>
             </div>
-            <span style={{ fontFamily: 'var(--font-heading)', fontWeight: '800', fontSize: '1.25rem' }}>Orbit</span>
+            <span style={{ fontFamily: 'var(--font-heading)', fontWeight: '800', fontSize: '1.375rem' }}>Orbit</span>
           </div>
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>© 2024 Orbit. All rights reserved.</p>
+          <p style={{ fontSize: '0.9375rem', color: '#94a3b8' }}>© 2024 Orbit. All rights reserved.</p>
         </div>
       </footer>
     </div>
