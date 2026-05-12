@@ -4,7 +4,6 @@ import { ArrowRight, Check, Zap, Shield, Clock, Users, GitBranch, BarChart3, Spa
 
 const Home: React.FC = () => {
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
-  const [countersStarted, setCountersStarted] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
