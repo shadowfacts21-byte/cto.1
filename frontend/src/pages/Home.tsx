@@ -186,7 +186,7 @@ const Home: React.FC = () => {
 
       {/* Hero Section */}
       <section style={{
-        padding: '80px 48px 60px', textAlign: 'center', minHeight: '85vh',
+        padding: '100px 48px 60px', textAlign: 'center', minHeight: '85vh',
         background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%)',
         position: 'relative', overflow: 'hidden'
       }}>
