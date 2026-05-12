@@ -187,21 +187,21 @@ const Home: React.FC = () => {
       {/* Hero Section */}
       <section style={{
         padding: '100px 48px 60px', textAlign: 'center', minHeight: '85vh',
-        background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%)',
+        background: 'linear-gradient(180deg, #fef2f2 0%, #fee2e2 50%, #fecaca 100%)',
         position: 'relative', overflow: 'hidden'
       }}>
         {/* Animated orbs */}
         <div className="orb-1" style={{
           position: 'absolute', top: '0%', left: '-10%', width: '600px', height: '600px',
-          background: 'radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, transparent 60%)', borderRadius: '50%', filter: 'blur(100px)'
+          background: 'radial-gradient(circle, rgba(220, 38, 38, 0.12) 0%, transparent 60%)', borderRadius: '50%', filter: 'blur(100px)'
         }} />
         <div className="orb-2" style={{
           position: 'absolute', bottom: '10%', right: '-15%', width: '700px', height: '700px',
-          background: 'radial-gradient(circle, rgba(6, 182, 212, 0.12) 0%, transparent 60%)', borderRadius: '50%', filter: 'blur(100px)'
+          background: 'radial-gradient(circle, rgba(244, 63, 94, 0.12) 0%, transparent 60%)', borderRadius: '50%', filter: 'blur(100px)'
         }} />
         <div className="orb-3" style={{
           position: 'absolute', top: '30%', left: '50%', transform: 'translateX(-50%)', width: '400px', height: '400px',
-          background: 'radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 60%)', borderRadius: '50%', filter: 'blur(80px)'
+          background: 'radial-gradient(circle, rgba(220, 38, 38, 0.08) 0%, transparent 60%)', borderRadius: '50%', filter: 'blur(80px)'
         }} />
 
         <div style={{ maxWidth: '900px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
