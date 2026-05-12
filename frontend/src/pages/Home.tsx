@@ -17,7 +17,7 @@ const Home: React.FC = () => {
             const id = entry.target.getAttribute('data-section');
             if (id) {
               setVisibleSections((prev) => new Set([...prev, id]));
-              if (id === 'stats') setCountersStarted(true);
+              if (id === 'stats') { }
             }
           }
         });
