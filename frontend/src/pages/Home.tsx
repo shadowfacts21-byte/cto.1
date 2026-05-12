@@ -186,7 +186,7 @@ const Home: React.FC = () => {
 
       {/* Hero Section */}
       <section style={{
-        padding: '150px 48px 80px', textAlign: 'center', minHeight: '100vh',
+        padding: '120px 48px 80px', textAlign: 'center', minHeight: '90vh',
         background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%)',
         position: 'relative', overflow: 'hidden'
       }}>
@@ -216,8 +216,8 @@ const Home: React.FC = () => {
           </div>
 
           <h1 className="hero-title" style={{
-            fontSize: 'clamp(3rem, 7vw, 4.5rem)', fontWeight: '900', fontFamily: 'var(--font-heading)',
-            color: '#0f172a', lineHeight: '1.05', marginBottom: '28px', letterSpacing: '-0.03em'
+            fontSize: 'clamp(2.5rem, 6vw, 4rem)', fontWeight: '900', fontFamily: 'var(--font-heading)',
+            color: '#0f172a', lineHeight: '1.05', marginBottom: '20px', letterSpacing: '-0.03em'
           }}>
             <span style={{ background: 'linear-gradient(135deg, #0f172a 40%, #2563EB 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
               The project management tool
@@ -259,7 +259,7 @@ const Home: React.FC = () => {
 
         {/* Enhanced Dashboard Preview */}
         <div className="hero-image" style={{
-          width: '100%', maxWidth: '1200px', margin: '60px auto 0',
+          width: '100%', maxWidth: '1200px', margin: '40px auto 0',
           background: 'rgba(255, 255, 255, 0.9)', backdropFilter: 'blur(20px)',
           borderRadius: '28px', boxShadow: '0 50px 120px rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.05)',
           border: '1px solid rgba(255,255,255,0.8)', overflow: 'hidden', position: 'relative', zIndex: 1
@@ -275,7 +275,7 @@ const Home: React.FC = () => {
             </div>
           </div>
 
-          <div style={{ display: 'flex', minHeight: '480px' }}>
+          <div style={{ display: 'flex', minHeight: '380px' }}>
             {/* Sidebar */}
             <div style={{ width: '260px', background: 'white', borderRight: '1px solid #e2e8f0', padding: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '28px', padding: '12px', background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(6, 182, 212, 0.08) 100%)', borderRadius: '12px', border: '1px solid rgba(37, 99, 235, 0.1)' }}>
