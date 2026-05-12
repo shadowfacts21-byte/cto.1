@@ -1,11 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Check, Zap, Shield, Clock, Users, GitBranch, BarChart3, Sparkles, Play, ChevronDown, Quote, Star } from 'lucide-react';
 
 const Home: React.FC = () => {
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const [scrolled, setScrolled] = useState(false);
-  const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -15,19 +14,6 @@ const Home: React.FC = () => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (heroRef.current) {
-        const rect = heroRef.current.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width - 0.5) * 20;
-        const y = ((e.clientY - rect.top) / rect.height - 0.5) * 20;
-        setMousePos({ x, y });
-      }
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   useEffect(() => {
@@ -151,7 +137,7 @@ const Home: React.FC = () => {
       </header>
 
       {/* Hero Section */}
-      <section ref={heroRef} style={{
+      <section style={{
         padding: '140px 48px 100px', textAlign: 'center', minHeight: '100vh',
         background: 'linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%)',
         position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center'
