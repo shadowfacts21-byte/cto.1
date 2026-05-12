@@ -59,7 +59,8 @@ const Register: React.FC = () => {
       alignItems: 'center',
       justifyContent: 'center',
       background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
-      padding: '24px'
+      padding: '24px',
+      overflow: 'hidden'
     }}>
       {/* Background decorative elements */}
       <div style={{
@@ -71,7 +72,8 @@ const Register: React.FC = () => {
         background: 'linear-gradient(135deg, var(--primary-light) 0%, rgba(6, 182, 212, 0.2) 100%)',
         borderRadius: '50%',
         opacity: 0.5,
-        filter: 'blur(80px)'
+        filter: 'blur(80px)',
+        pointerEvents: 'none'
       }} />
       <div style={{
         position: 'fixed',
@@ -82,19 +84,20 @@ const Register: React.FC = () => {
         background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.3) 0%, var(--primary-light) 100%)',
         borderRadius: '50%',
         opacity: 0.4,
-        filter: 'blur(80px)'
+        filter: 'blur(80px)',
+        pointerEvents: 'none'
       }} />
 
       <div style={{
         position: 'relative',
+        zIndex: 1,
         width: '100%',
         maxWidth: '440px',
         background: 'var(--surface)',
         borderRadius: '20px',
         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.15)',
         border: '1px solid var(--border)',
-        padding: '40px',
-        backdropFilter: 'blur(10px)'
+        padding: '40px'
       }}>
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
