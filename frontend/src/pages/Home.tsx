@@ -117,6 +117,8 @@ const Home: React.FC = () => {
         .orb-2 { animation: float 12s ease-in-out infinite 2s; }
         .orb-3 { animation: float 8s ease-in-out infinite 4s; }
         .pulse-glow { animation: pulse-glow 2.5s ease-in-out infinite; }
+        @keyframes float-slow { 0%, 100% { transform: translateY(0px) scale(1); } 50% { transform: translateY(-20px) scale(1.05); } }
+        @keyframes particle-float { 0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; } 50% { transform: translateY(-15px) translateX(5px); opacity: 0.6; } }
         .gradient-animate { background-size: 200% 200%; animation: gradient-shift 4s ease infinite; }
         .cta-button { transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
         .cta-button:hover { transform: scale(1.06) translateY(-3px); box-shadow: 0 25px 50px rgba(37, 99, 235, 0.45), 0 0 0 1px rgba(37, 99, 235, 0.3); }
@@ -161,12 +163,41 @@ const Home: React.FC = () => {
       {/* Navbar */}
       <header className={scrolled ? 'navbar-scrolled' : ''} style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-        background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)',
+        background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(20px)',
         borderBottom: '1px solid rgba(229, 231, 235, 0.5)', padding: '0 48px', height: '72px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+        transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)', overflow: 'hidden'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        {/* Animated background elements */}
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'hidden', pointerEvents: 'none'
+        }}>
+          <div style={{
+            position: 'absolute', top: '-50%', left: '10%', width: '300px', height: '300px',
+            background: 'radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 70%)',
+            borderRadius: '50%', animation: 'float-slow 8s ease-in-out infinite'
+          }} />
+          <div style={{
+            position: 'absolute', top: '-30%', right: '15%', width: '250px', height: '250px',
+            background: 'radial-gradient(circle, rgba(6, 182, 212, 0.06) 0%, transparent 70%)',
+            borderRadius: '50%', animation: 'float-slow 10s ease-in-out infinite reverse'
+          }} />
+          <div style={{
+            position: 'absolute', top: '-20%', left: '50%', transform: 'translateX(-50%)', width: '200px', height: '200px',
+            background: 'radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 70%)',
+            borderRadius: '50%', animation: 'float-slow 12s ease-in-out infinite'
+          }} />
+          {/* Floating particles */}
+          {[...Array(6)].map((_, i) => (
+            <div key={i} style={{
+              position: 'absolute', top: `${20 + i * 15}%`, left: `${10 + i * 15}%`,
+              width: '4px', height: '4px', background: 'rgba(37, 99, 235, 0.3)',
+              borderRadius: '50%', animation: `particle-float ${3 + i * 0.5}s ease-in-out infinite`,
+              animationDelay: `${i * 0.3}s`
+            }} />
+          ))}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', position: 'relative', zIndex: 1 }}>
           <div style={{
             width: '44px', height: '44px', background: 'linear-gradient(135deg, #2563EB 0%, #06B6D4 100%)',
             borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white',
@@ -187,21 +218,21 @@ const Home: React.FC = () => {
       {/* Hero Section */}
       <section style={{
         padding: '100px 48px 60px', textAlign: 'center', minHeight: '85vh',
-        background: 'linear-gradient(180deg, #fef2f2 0%, #fee2e2 50%, #fecaca 100%)',
+        background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%)',
         position: 'relative', overflow: 'hidden'
       }}>
         {/* Animated orbs */}
         <div className="orb-1" style={{
           position: 'absolute', top: '0%', left: '-10%', width: '600px', height: '600px',
-          background: 'radial-gradient(circle, rgba(220, 38, 38, 0.12) 0%, transparent 60%)', borderRadius: '50%', filter: 'blur(100px)'
+          background: 'radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, transparent 60%)', borderRadius: '50%', filter: 'blur(100px)'
         }} />
         <div className="orb-2" style={{
           position: 'absolute', bottom: '10%', right: '-15%', width: '700px', height: '700px',
-          background: 'radial-gradient(circle, rgba(244, 63, 94, 0.12) 0%, transparent 60%)', borderRadius: '50%', filter: 'blur(100px)'
+          background: 'radial-gradient(circle, rgba(6, 182, 212, 0.12) 0%, transparent 60%)', borderRadius: '50%', filter: 'blur(100px)'
         }} />
         <div className="orb-3" style={{
           position: 'absolute', top: '30%', left: '50%', transform: 'translateX(-50%)', width: '400px', height: '400px',
-          background: 'radial-gradient(circle, rgba(220, 38, 38, 0.08) 0%, transparent 60%)', borderRadius: '50%', filter: 'blur(80px)'
+          background: 'radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 60%)', borderRadius: '50%', filter: 'blur(80px)'
         }} />
 
         <div style={{ maxWidth: '900px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
