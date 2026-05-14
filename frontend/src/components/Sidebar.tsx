@@ -1,11 +1,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, LayoutDashboard, Settings, Users, Plus, Star } from 'lucide-react';
+import { Home, LayoutDashboard, Settings, Users, Plus, Star, BarChart3 } from 'lucide-react';
 
 const Sidebar: React.FC = () => {
   const navItems = [
     { name: 'Home', path: '/', icon: Home },
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+    { name: 'Analytics', path: '/analytics', icon: BarChart3 },
     { name: 'Users', path: '/users', icon: Users },
     { name: 'Settings', path: '/settings', icon: Settings },
   ];
@@ -16,7 +17,7 @@ const Sidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-900 w-72 flex-shrink-0 hidden lg:flex flex-col sticky top-16 h-[calc(100vh-4rem)] transition-colors duration-300">
+    <aside className="bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-900 w-full h-full flex flex-col transition-colors duration-300">
       <div className="flex-1 py-8 px-4 flex flex-col gap-10">
         <div>
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6 px-4">Menu</p>

@@ -6,7 +6,7 @@ import type { Plan, UsageStats, Integration } from '../services/billingIntegrati
 import type { AutomationRule } from '../services/automationService';
 
 const Settings: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'billing' | 'integrations' | 'automations' | 'team' | 'appearance'>('billing');
+  const [activeTab, setActiveTab] = useState<'profile' | 'organization' | 'billing' | 'integrations' | 'automations' | 'notifications' | 'security' | 'appearance'>('profile');
   const [plan, setPlan] = useState<Plan | null>(null);
   const [usage, setUsage] = useState<UsageStats | null>(null);
   const [integrations, setIntegrations] = useState<Integration[]>([]);
@@ -117,10 +117,13 @@ const Settings: React.FC = () => {
   }
 
   const tabs = [
+    { id: 'profile', name: 'Profile', icon: Users },
+    { id: 'organization', name: 'Organization', icon: Globe },
     { id: 'billing', name: 'Billing', icon: CreditCard },
+    { id: 'notifications', name: 'Notifications', icon: MessageSquare },
+    { id: 'security', name: 'Security', icon: Shield },
     { id: 'integrations', name: 'Integrations', icon: Share2 },
     { id: 'automations', name: 'Automations', icon: Zap },
-    { id: 'team', name: 'Team', icon: Users },
     { id: 'appearance', name: 'Appearance', icon: Moon },
   ];
 
@@ -149,6 +152,83 @@ const Settings: React.FC = () => {
       </div>
 
       <div className="animate-slide-up">
+        {activeTab === 'profile' && (
+          <div className="space-y-10">
+            <section className="card p-8">
+              <h2 className="text-xl font-black mb-8 dark:text-white">Public Profile</h2>
+              <div className="flex flex-col md:flex-row gap-10 items-start">
+                <div className="relative group">
+                  <div className="w-32 h-32 rounded-[2.5rem] bg-gradient-to-tr from-primary to-accent flex items-center justify-center text-white text-4xl font-black shadow-2xl group-hover:scale-105 transition-transform duration-500">
+                    AR
+                  </div>
+                  <button className="absolute -bottom-2 -right-2 bg-white dark:bg-slate-800 p-3 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 hover:text-primary transition-colors">
+                    <Plus size={20} />
+                  </button>
+                </div>
+                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                  <div className="space-y-2">
+                    <label className="text-xs font-black uppercase tracking-widest text-slate-400">Full Name</label>
+                    <input type="text" defaultValue="Alex Rivera" className="input-field" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-black uppercase tracking-widest text-slate-400">Email Address</label>
+                    <input type="email" defaultValue="alex@example.com" className="input-field" />
+                  </div>
+                  <div className="md:col-span-2 space-y-2">
+                    <label className="text-xs font-black uppercase tracking-widest text-slate-400">Bio</label>
+                    <textarea defaultValue="Product Designer & Frontend Engineer at Acme Corp." className="input-field" rows={3} />
+                  </div>
+                </div>
+              </div>
+              <div className="mt-10 pt-10 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+                <button className="btn-primary px-10">Save Changes</button>
+              </div>
+            </section>
+          </div>
+        )}
+
+        {activeTab === 'organization' && (
+          <div className="space-y-10">
+            <section className="card p-8">
+              <h2 className="text-xl font-black mb-8 dark:text-white">Organization Details</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-slate-400">Organization Name</label>
+                  <input type="text" defaultValue="Acme Corp" className="input-field" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-slate-400">Website</label>
+                  <input type="url" defaultValue="https://acme.com" className="input-field" />
+                </div>
+                <div className="md:col-span-2 space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-slate-400">Organization Logo</label>
+                  <div className="flex items-center gap-6 p-6 border-2 border-dashed border-slate-100 dark:border-slate-800 rounded-[2rem]">
+                    <div className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+                      <Globe size={32} />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-bold dark:text-white">Upload a new logo</p>
+                      <p className="text-xs text-slate-500">JPG, PNG or SVG. Max size 2MB.</p>
+                    </div>
+                    <button className="btn-secondary py-2">Select File</button>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-10 pt-10 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+                <button className="btn-primary px-10">Update Organization</button>
+              </div>
+            </section>
+
+            <section className="card p-8 border-red-100 dark:border-red-900/20 bg-red-50/20">
+              <h2 className="text-xl font-black mb-2 text-red-600">Danger Zone</h2>
+              <p className="text-sm text-slate-500 mb-8">Once you delete an organization, there is no going back. Please be certain.</p>
+              <button className="bg-red-500 hover:bg-red-600 text-white font-black text-xs uppercase tracking-[0.2em] px-8 py-4 rounded-2xl transition-all shadow-lg shadow-red-500/20">
+                Delete Organization
+              </button>
+            </section>
+          </div>
+        )}
+
         {activeTab === 'billing' && (
           <div className="space-y-8">
             <section className="card p-8 bg-mesh relative overflow-hidden">
@@ -341,47 +421,72 @@ const Settings: React.FC = () => {
           </div>
         )}
 
-        {activeTab === 'team' && (
+        {activeTab === 'notifications' && (
           <div className="space-y-8">
             <section className="card p-8">
-              <h2 className="text-lg font-bold mb-6 dark:text-white">Invite Team Member</h2>
-              <form onSubmit={handleInvite} className="flex flex-col sm:flex-row gap-4">
-                <input
-                  type="email"
-                  value={inviteEmail}
-                  onChange={(e) => setInviteEmail(e.target.value)}
-                  placeholder="colleague@example.com"
-                  className="input-field flex-1"
-                  required
-                />
-                <button
-                  type="submit"
-                  className="btn-primary py-3 px-10 shadow-lg shadow-primary/20"
-                >
-                  <Plus size={20} className="mr-2" />
-                  Send Invitation
-                </button>
-              </form>
+              <h2 className="text-xl font-black mb-8 dark:text-white">Email Notifications</h2>
+              <div className="space-y-6">
+                {[
+                  { id: 'n1', label: 'Task Assigned', desc: 'When someone assigns a task to you.' },
+                  { id: 'n2', label: 'Due Date Reminders', desc: '24 hours before a task is due.' },
+                  { id: 'n3', label: 'New Comments', desc: 'When someone mentions you or comments on your tasks.' },
+                  { id: 'n4', label: 'Project Updates', desc: 'Weekly summary of project progress.' }
+                ].map(item => (
+                  <div key={item.id} className="flex items-center justify-between">
+                    <div>
+                      <p className="font-bold dark:text-white">{item.label}</p>
+                      <p className="text-sm text-slate-500">{item.desc}</p>
+                    </div>
+                    <button className="relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-300 bg-primary">
+                      <span className="translate-x-5 pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition duration-300" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        )}
+
+        {activeTab === 'security' && (
+          <div className="space-y-8">
+            <section className="card p-8">
+              <h2 className="text-xl font-black mb-8 dark:text-white">Change Password</h2>
+              <div className="space-y-6 max-w-md">
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-slate-400">Current Password</label>
+                  <input type="password" placeholder="••••••••" className="input-field" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-slate-400">New Password</label>
+                  <input type="password" placeholder="••••••••" className="input-field" />
+                </div>
+                <button className="btn-primary py-3 px-8">Update Password</button>
+              </div>
             </section>
 
-            <section className="card overflow-hidden">
-              <div className="px-8 py-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
-                <h2 className="text-lg font-bold dark:text-white">Active Members</h2>
-              </div>
-              <div className="divide-y divide-slate-100 dark:divide-slate-800">
-                <div className="p-8 flex justify-between items-center hover:bg-slate-50/50 dark:hover:bg-slate-900/30 transition-colors">
-                  <div className="flex items-center gap-5">
-                    <div className="w-14 h-14 bg-gradient-to-tr from-primary to-accent rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-primary/20">
-                      JD
-                    </div>
-                    <div>
-                      <p className="font-bold text-slate-900 dark:text-white text-lg">John Doe <span className="text-slate-400 font-medium">(You)</span></p>
-                      <p className="text-sm text-slate-500 font-medium">john@example.com</p>
-                    </div>
-                  </div>
-                  <span className="bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full">Owner</span>
+            <section className="card p-8">
+              <h2 className="text-xl font-black mb-4 dark:text-white flex items-center gap-3">
+                Two-Factor Authentication
+                <span className="bg-amber-100 text-amber-600 text-[10px] font-black uppercase px-2 py-1 rounded">Recommended</span>
+              </h2>
+              <p className="text-sm text-slate-500 mb-8">Add an extra layer of security to your account by requiring more than just a password to log in.</p>
+              <button className="btn-secondary py-3 px-8 border-primary text-primary hover:bg-primary/5">
+                Enable 2FA
+              </button>
+            </section>
+
+            <section className="card p-8">
+              <h2 className="text-xl font-black mb-8 dark:text-white">API Keys</h2>
+              <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-2xl flex items-center justify-between border border-slate-100 dark:border-slate-800">
+                <div>
+                  <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">Production Key</p>
+                  <p className="font-mono text-sm dark:text-white">sk_live_••••••••••••••••••••••••</p>
                 </div>
+                <button className="text-primary font-bold text-sm hover:underline">Reveal Key</button>
               </div>
+              <button className="btn-secondary mt-6 flex items-center gap-2">
+                <Plus size={18} /> Generate New Key
+              </button>
             </section>
           </div>
         )}

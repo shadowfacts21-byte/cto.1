@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, MoreVertical, MessageSquare, User, AlertCircle, Loader2, Send, Clock, Trash2 } from 'lucide-react';
+import { Plus, MoreVertical, MessageSquare, User, AlertCircle, Loader2, Send, Clock, Trash2, Calendar } from 'lucide-react';
 import { taskService } from '../services/taskService';
 import type { Task, Comment, Activity } from '../services/taskService';
 import Modal from './Modal';
@@ -25,6 +25,8 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId, readOnly = false }
   
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [newTaskDesc, setNewTaskDesc] = useState('');
+  const [newTaskDueDate, setNewTaskDueDate] = useState('');
+  const [newTaskPriority, setNewTaskPriority] = useState<Task['priority']>('medium');
   const [newTaskStatus, setNewTaskStatus] = useState<Task['status']>('todo');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [draggingTaskId, setDraggingTaskId] = useState<string | null>(null);
@@ -33,6 +35,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId, readOnly = false }
   const columns: { id: Task['status']; title: string; color: string }[] = [
     { id: 'todo', title: 'To Do', color: 'bg-slate-400' },
     { id: 'in-progress', title: 'In Progress', color: 'bg-primary' },
+    { id: 'review', title: 'Review', color: 'bg-amber-500' },
     { id: 'done', title: 'Done', color: 'bg-green-500' },
   ];
 
@@ -114,12 +117,15 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId, readOnly = false }
         title: newTaskTitle,
         description: newTaskDesc,
         status: newTaskStatus,
-        priority: 'medium'
+        priority: newTaskPriority,
+        due_date: newTaskDueDate || undefined
       });
       setTasks([...tasks, newTask]);
       setIsCreateModalOpen(false);
       setNewTaskTitle('');
       setNewTaskDesc('');
+      setNewTaskDueDate('');
+      setNewTaskPriority('medium');
     } catch (err) {
       console.error('Error creating task:', err);
     } finally {
@@ -211,14 +217,20 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId, readOnly = false }
                 <h4 className="font-bold text-slate-900 dark:text-white mb-2 leading-tight group-hover:text-primary transition-colors">{task.title}</h4>
                 <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-6">{task.description || 'No description provided.'}</p>
                 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-50 dark:border-slate-800/50">
                   <div className="flex items-center gap-4 text-slate-400">
-                    <div className="flex items-center gap-1.5 text-xs font-bold">
+                    <div className="flex items-center gap-1.5 text-xs font-bold" title="Comments">
                       <MessageSquare size={14} />
                       <span>{task.id.length % 3}</span>
                     </div>
+                    {task.due_date && (
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-red-500" title="Due Date">
+                        <Calendar size={14} />
+                        <span>{new Date(task.due_date).toLocaleDateString()}</span>
+                      </div>
+                    )}
                     {task.total_minutes !== undefined && task.total_minutes > 0 && (
-                      <div className="flex items-center gap-1.5 text-xs font-bold">
+                      <div className="flex items-center gap-1.5 text-xs font-bold" title="Time Logged">
                         <Clock size={14} className="text-primary" />
                         <span className="text-slate-600 dark:text-slate-300">{Math.floor(task.total_minutes / 60)}h {task.total_minutes % 60}m</span>
                       </div>
@@ -264,7 +276,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId, readOnly = false }
               <Timer taskId={selectedTask.id} />
             </div>
             
-            <div className="grid grid-cols-2 gap-4 border-y border-slate-100 dark:border-slate-800 py-6">
+            <div className="grid grid-cols-3 gap-4 border-y border-slate-100 dark:border-slate-800 py-6">
               <div className="space-y-2">
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2">
                   <AlertCircle size={14} className="text-primary"/> Priority
@@ -285,6 +297,14 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId, readOnly = false }
                     {selectedTask.assigned_to ? selectedTask.assigned_to.substring(0, 2).toUpperCase() : '??'}
                   </div>
                   <span className="text-sm font-bold text-slate-700 dark:text-slate-300">{selectedTask.assigned_to || 'Unassigned'}</span>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2">
+                  <Calendar size={14} className="text-primary"/> Due Date
+                </span>
+                <div className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                  {selectedTask.due_date ? new Date(selectedTask.due_date).toLocaleDateString() : 'Not set'}
                 </div>
               </div>
             </div>
@@ -422,6 +442,31 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId, readOnly = false }
               rows={4}
               disabled={isSubmitting}
             />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Priority</label>
+              <select
+                value={newTaskPriority}
+                onChange={(e) => setNewTaskPriority(e.target.value as any)}
+                className="input-field"
+                disabled={isSubmitting}
+              >
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Due Date</label>
+              <input
+                type="date"
+                value={newTaskDueDate}
+                onChange={(e) => setNewTaskDueDate(e.target.value)}
+                className="input-field"
+                disabled={isSubmitting}
+              />
+            </div>
           </div>
           <div className="flex justify-end gap-4 pt-6">
             <button

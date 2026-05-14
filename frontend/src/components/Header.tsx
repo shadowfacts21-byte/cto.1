@@ -1,14 +1,26 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import { CheckCircle2, Bell, Search, User } from 'lucide-react';
+import { CheckCircle2, Bell, Search, User, Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onMenuToggle?: () => void;
+  isMenuOpen?: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ onMenuToggle, isMenuOpen }) => {
   const { user, logout } = useAuth();
 
   return (
     <header className="bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 h-16 flex items-center justify-between px-6 sticky top-0 z-40 transition-colors duration-300">
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-4 md:gap-8">
+        <button 
+          onClick={onMenuToggle}
+          className="lg:hidden p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-all"
+        >
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+
         <Link to="/dashboard" className="flex items-center gap-2 group">
           <div className="bg-primary p-1 rounded-lg text-white group-hover:rotate-12 transition-transform shadow-lg shadow-primary/20">
             <CheckCircle2 size={20} />
