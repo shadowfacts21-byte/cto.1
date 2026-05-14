@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const attachmentController = require('../controllers/attachmentController');
-const { auth } = require('../middleware/authMiddleware');
+const authMiddleware = require('../middleware/authMiddleware');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-router.use(auth);
+router.use(authMiddleware);
 
 router.post('/tasks/:id/attachments', upload.single('file'), attachmentController.upload);
 router.get('/tasks/:id/attachments', attachmentController.list);

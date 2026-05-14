@@ -1,3 +1,8 @@
+<!-- managed:linked-repos -->
+## Linked Repositories
+- shadowfacts21-byte/cto.1
+<!-- /managed:linked-repos -->
+
 # Code Workflow
 
 ## Linked Repositories

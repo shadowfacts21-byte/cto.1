@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const timeController = require('../controllers/timeController');
-const { auth } = require('../middleware/authMiddleware');
+const authMiddleware = require('../middleware/authMiddleware');
 
 // All routes require authentication
-router.use(auth);
+router.use(authMiddleware);
 
 router.get('/tasks/:id/time-entries', timeController.listByTask);
 router.post('/tasks/:id/time-entries', timeController.startTimer);

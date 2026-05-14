@@ -16,13 +16,16 @@ const notificationRoutes = require('./routes/notificationRoutes');
 const app = express();
 
 app.use(cors());
+
+// Use billing routes BEFORE express.json() to allow for raw body on webhooks
+app.use('/api/billing', billingRoutes);
+
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/orgs', orgRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/tasks', taskRoutes);
-app.use('/api/billing', billingRoutes);
 app.use('/api/time', timeRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/attachments', attachmentRoutes);

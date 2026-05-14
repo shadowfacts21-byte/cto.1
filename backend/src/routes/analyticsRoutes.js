@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const analyticsController = require('../controllers/analyticsController');
-const { auth } = require('../middleware/authMiddleware');
+const authMiddleware = require('../middleware/authMiddleware');
 
-router.use(auth);
+router.use(authMiddleware);
 
 router.get('/project/:id', analyticsController.getProjectAnalytics);
 router.get('/user/:id', analyticsController.getUserAnalytics);
