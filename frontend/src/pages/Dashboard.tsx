@@ -83,7 +83,7 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div style={{ maxWidth: '1280px', margin: '0 auto', minHeight: 'calc(100vh - 64px)', paddingTop: '24px' }}>
+    <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
       {/* Page Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
         <h1 style={{ fontSize: '1.75rem', fontWeight: '800', fontFamily: 'var(--font-heading)', color: 'var(--text)' }}>
