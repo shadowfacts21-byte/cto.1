@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Building, Bell, Shield, Key, Palette, Check, Eye, EyeOff, Zap, CreditCard, Crown, Lock } from 'lucide-react';
+import { User, Bell, Shield, Palette, Check, Zap, Crown, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Settings: React.FC = () => {
@@ -27,18 +27,7 @@ const Settings: React.FC = () => {
     { id: 'enterprise', name: 'Enterprise', price: 99, features: ['Unlimited Everything', 'SSO/SAML', 'Dedicated Support', 'Custom SLA', '500GB Storage'] },
   ];
 
-  const currentPlan = 'pro'; // Mock current plan
-
-  const features = [
-    { id: 'kanban', name: 'Kanban Board', description: 'Drag and drop task management', tier: 'free' },
-    { id: 'time', name: 'Time Tracking', description: 'Track time spent on tasks', tier: 'free' },
-    { id: 'analytics', name: 'Analytics Dashboard', description: 'Burndown charts & velocity', tier: 'pro' },
-    { id: 'github', name: 'GitHub Integration', description: 'Link commits to tasks', tier: 'pro' },
-    { id: 'slack', name: 'Slack Integration', description: 'Get notifications in Slack', tier: 'pro' },
-    { id: 'automation', name: 'Automation Rules', description: 'Automate repetitive tasks', tier: 'pro' },
-    { id: 'sso', name: 'SSO / SAML', description: 'Enterprise single sign-on', tier: 'enterprise' },
-    { id: 'dedicated', name: 'Dedicated Support', description: '24/7 priority support', tier: 'enterprise' },
-  ];
+  const currentPlan: string = 'pro'; // Mock current plan
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -181,7 +170,7 @@ const Settings: React.FC = () => {
                         <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{app.desc}</p>
                       </div>
                     </div>
-                    {app.tier !== 'free' && currentPlan === 'free' ? (
+                    {app.tier !== 'free' && currentPlan !== 'pro' && currentPlan !== 'enterprise' ? (
                       <button className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Lock size={14} /> Upgrade
                       </button>
