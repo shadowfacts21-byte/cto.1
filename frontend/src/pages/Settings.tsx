@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Building, Bell, Shield, Key, Palette, Globe, Mail, Check, X, Eye, EyeOff, Zap, CreditCard } from 'lucide-react';
+import { User, Building, Bell, Shield, Key, Palette, Check, Eye, EyeOff, Zap, CreditCard } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { billingService, integrationService, type Plan, type UsageStats, type Integration } from '../services/billingIntegrationService';
 
