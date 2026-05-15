@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BarChart3, TrendingUp, Users, Clock, CheckCircle, Target, Calendar, Filter } from 'lucide-react';
+import { TrendingUp, Users, Clock, CheckCircle, Target, Calendar } from 'lucide-react';
 
 // Simple chart components since we can't install recharts easily
 const BarChart: React.FC<{ data: { label: string; value: number; color?: string }[]; height?: number }> = ({ data, height = 200 }) => (

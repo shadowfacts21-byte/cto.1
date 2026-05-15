@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, Mail, MoreHorizontal, Search, Plus, Shield, Clock, CheckCircle, X } from 'lucide-react';
+import { Users, MoreHorizontal, Search, Plus, Shield, Clock, CheckCircle, X } from 'lucide-react';
 
 interface TeamMember {
   id: string;

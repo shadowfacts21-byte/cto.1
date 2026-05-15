@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, Filter, ChevronRight, MoreHorizontal, Calendar, Clock, CheckCircle } from 'lucide-react';
+import { Plus, Search, Calendar, MoreHorizontal } from 'lucide-react';
 
 interface Task {
   id: string;
