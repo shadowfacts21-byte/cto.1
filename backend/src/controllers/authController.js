@@ -1,6 +1,7 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { sendWelcomeEmail } = require('../services/emailService');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
 
@@ -52,6 +53,11 @@ exports.register = async (req, res) => {
     const user = await User.create({ email, passwordHash, name });
 
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '24h' });
+
+    // Send welcome email (async, non-blocking)
+    sendWelcomeEmail({ email: user.email, name: user.name }).catch(err => {
+      console.error('Welcome email failed:', err.message);
+    });
 
     res.status(201).json({ user, token });
   } catch (error) {

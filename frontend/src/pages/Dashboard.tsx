@@ -13,6 +13,13 @@ const Dashboard: React.FC = () => {
   const [isOrgModalOpen, setIsOrgModalOpen] = useState(false);
   const [newOrgName, setNewOrgName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Project creation state
+  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
+  const [selectedOrgSlug, setSelectedOrgSlug] = useState<string>('');
+  const [newProjectName, setNewProjectName] = useState('');
+  const [newProjectDescription, setNewProjectDescription] = useState('');
+  const [isCreatingProject, setIsCreatingProject] = useState(false);
 
   const handleCreateOrg = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,6 +36,36 @@ const Dashboard: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+  
+  const handleCreateProject = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newProjectName.trim() || !selectedOrgSlug) return;
+
+    try {
+      setIsCreatingProject(true);
+      const newProject = await projectService.createProject(selectedOrgSlug, { 
+        name: newProjectName, 
+        description: newProjectDescription 
+      });
+      setProjectsMap(prev => ({
+        ...prev,
+        [selectedOrgSlug]: [...(prev[selectedOrgSlug] || []), newProject]
+      }));
+      setIsProjectModalOpen(false);
+      setNewProjectName('');
+      setNewProjectDescription('');
+      setSelectedOrgSlug('');
+    } catch (err) {
+      console.error('Error creating project:', err);
+    } finally {
+      setIsCreatingProject(false);
+    }
+  };
+  
+  const openProjectModal = (orgSlug: string) => {
+    setSelectedOrgSlug(orgSlug);
+    setIsProjectModalOpen(true);
   };
 
   useEffect(() => {
@@ -242,6 +279,7 @@ const Dashboard: React.FC = () => {
                   {/* New Project Card */}
                   <button 
                     className="card"
+                    onClick={() => openProjectModal(org.slug)}
                     style={{
                       display: 'flex',
                       flexDirection: 'column',
@@ -301,6 +339,57 @@ const Dashboard: React.FC = () => {
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Creating...' : 'Create Organization'}
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* Create Project Modal */}
+      <Modal
+        isOpen={isProjectModalOpen}
+        onClose={() => setIsProjectModalOpen(false)}
+        title="Create New Project"
+      >
+        <form onSubmit={handleCreateProject} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="form-group">
+            <label className="form-label">Project Name</label>
+            <input
+              type="text"
+              value={newProjectName}
+              onChange={(e) => setNewProjectName(e.target.value)}
+              className="form-input"
+              placeholder="e.g. Website Redesign"
+              required
+              disabled={isCreatingProject}
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Description (optional)</label>
+            <textarea
+              value={newProjectDescription}
+              onChange={(e) => setNewProjectDescription(e.target.value)}
+              className="form-input"
+              placeholder="Brief description of the project..."
+              rows={3}
+              disabled={isCreatingProject}
+              style={{ resize: 'vertical' }}
+            />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', paddingTop: '16px', borderTop: '1px solid var(--border-light)' }}>
+            <button
+              type="button"
+              onClick={() => setIsProjectModalOpen(false)}
+              className="btn btn-secondary"
+              disabled={isCreatingProject}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={isCreatingProject}
+            >
+              {isCreatingProject ? 'Creating...' : 'Create Project'}
             </button>
           </div>
         </form>
